@@ -1,0 +1,48 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile and Run",
+            "type": "shell",
+            "command": "run.bat -d",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Force Clean",
+            "type": "shell",
+            "command": "run.bat -fclean",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Soft Clean",
+            "type": "shell",
+            "command": "run.bat -clean",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Compile",
+            "type": "shell",
+            "command": "run.bat -compile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Run Previous",
+            "type": "shell",
+            "command": "run.bat -compile"
+        }
+    ]
+}

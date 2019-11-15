@@ -1,36 +1,18 @@
 
 module testbench();
 
-  reg [4:0] i;
-  reg [4:0] hoursIn1; 
-  wire  DayNight;
-  
-  TimeOfDayInHoursToBoolean_CL timeCL(hoursIn1, DayNight);
-  
-  initial begin
-   	
-  //$display acts like a classic C printf command.
-  $display ("|##|HoursIn|DayNight|");
-  $display ("|==+=======+========|");
-  
-    //A for loop, with register i being the loop control variable.
-	for (i = 0; i < 24; i = i + 1) 
-	begin//Open the code blook of the for loop
-		hoursIn1 = i;
-		#5
+    reg [8:0] lane1 = 9'b101010101;
+    reg [8:0] lane2 = 9'b000111011; 
+    wire  Result;
 
+    MagnitudeComparator mg (lane2, lane1, Result);
 
-		
-		$display ("|%2d| %5b | %1b      |",i,hoursIn1,DayNight);
-		if(i%4==3) //Every fourth row of the table, put in a marker for easier reading.
-		 $display ("|--+-------+--------|");
-  
-  
-	end
- 
-	#10
-	$finish;
-  end
-  
+    initial begin
+
+    $display("%b", Result);
+
+    $finish;
+    end
+
 endmodule
 

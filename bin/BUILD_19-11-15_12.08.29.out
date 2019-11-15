@@ -1,0 +1,84 @@
+#! /usr/local/iverilog/bin/vvp
+:ivl_version "11.0 (devel)" "(s20150603-642-g3bdb50da)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "system";
+:vpi_module "vhdl_sys";
+:vpi_module "vhdl_textio";
+:vpi_module "v2005_math";
+:vpi_module "va_math";
+S_000000000100d950 .scope module, "GetLargestLane" "GetLargestLane" 2 18;
+ .timescale 0 0;
+    .port_info 0 /INPUT 64 "lane";
+    .port_info 1 /OUTPUT 4 "out";
+o0000000000f46fa8 .functor BUFZ 64, C4<zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz>; HiZ drive
+v0000000000f45280_0 .net "lane", 63 0, o0000000000f46fa8;  0 drivers
+o0000000000f46fd8 .functor BUFZ 4, C4<zzzz>; HiZ drive
+v000000000100dae0_0 .net "out", 3 0, o0000000000f46fd8;  0 drivers
+S_0000000000f44f60 .scope module, "TimeOfDayInHoursToBoolean_CL" "TimeOfDayInHoursToBoolean_CL" 3 4;
+ .timescale 0 0;
+    .port_info 0 /INPUT 5 "hoursIn";
+    .port_info 1 /OUTPUT 1 "boolOut";
+L_0000000000f434b0 .functor NOT 1, L_0000000000f425e0, C4<0>, C4<0>, C4<0>;
+L_0000000000f43520 .functor AND 1, L_0000000000f434b0, L_0000000000f42680, C4<1>, C4<1>;
+L_0000000000f43590 .functor AND 1, L_0000000000f43520, L_0000000000f427c0, C4<1>, C4<1>;
+L_0000000000f43690 .functor OR 1, L_0000000000f43590, L_0000000000f42860, C4<0>, C4<0>;
+L_0000000000f43700 .functor NOT 1, L_0000000000f8d840, C4<0>, C4<0>, C4<0>;
+L_0000000000f43770 .functor AND 1, L_0000000000f42900, L_0000000000f43700, C4<1>, C4<1>;
+L_0000000000f437e0 .functor OR 1, L_0000000000f43690, L_0000000000f43770, C4<0>, C4<0>;
+v0000000000f42cc0_0 .net *"_s1", 0 0, L_0000000000f425e0;  1 drivers
+v0000000000f43080_0 .net *"_s10", 0 0, L_0000000000f43590;  1 drivers
+v0000000000f42400_0 .net *"_s13", 0 0, L_0000000000f42860;  1 drivers
+v0000000000f42720_0 .net *"_s14", 0 0, L_0000000000f43690;  1 drivers
+v0000000000f42d60_0 .net *"_s17", 0 0, L_0000000000f42900;  1 drivers
+v0000000000f42ae0_0 .net *"_s19", 0 0, L_0000000000f8d840;  1 drivers
+v0000000000f42e00_0 .net *"_s2", 0 0, L_0000000000f434b0;  1 drivers
+v0000000000f42ea0_0 .net *"_s20", 0 0, L_0000000000f43700;  1 drivers
+v0000000000f429a0_0 .net *"_s22", 0 0, L_0000000000f43770;  1 drivers
+v0000000000f42f40_0 .net *"_s5", 0 0, L_0000000000f42680;  1 drivers
+v0000000000f42360_0 .net *"_s6", 0 0, L_0000000000f43520;  1 drivers
+v0000000000f42a40_0 .net *"_s9", 0 0, L_0000000000f427c0;  1 drivers
+v0000000000f424a0_0 .net "boolOut", 0 0, L_0000000000f437e0;  1 drivers
+o0000000000f472d8 .functor BUFZ 5, C4<zzzzz>; HiZ drive
+v0000000000f42b80_0 .net "hoursIn", 4 0, o0000000000f472d8;  0 drivers
+L_0000000000f425e0 .part o0000000000f472d8, 4, 1;
+L_0000000000f42680 .part o0000000000f472d8, 2, 1;
+L_0000000000f427c0 .part o0000000000f472d8, 1, 1;
+L_0000000000f42860 .part o0000000000f472d8, 3, 1;
+L_0000000000f42900 .part o0000000000f472d8, 4, 1;
+L_0000000000f8d840 .part o0000000000f472d8, 2, 1;
+S_0000000000f450f0 .scope module, "testbench" "testbench" 4 2;
+ .timescale 0 0;
+v0000000000f42c20_0 .net "Result", 0 0, L_0000000000f8c800;  1 drivers
+v0000000000f43260_0 .var "lane1", 8 0;
+v0000000000f42540_0 .var "lane2", 8 0;
+S_0000000000f43320 .scope module, "mg" "MagnitudeComparator" 4 8, 2 33 0, S_0000000000f450f0;
+ .timescale 0 0;
+    .port_info 0 /INPUT 9 "A";
+    .port_info 1 /INPUT 9 "B";
+    .port_info 2 /OUTPUT 1 "Result";
+v0000000000f431c0_0 .net "A", 8 0, v0000000000f43260_0;  1 drivers
+v0000000000f42fe0_0 .net "B", 8 0, v0000000000f42540_0;  1 drivers
+v0000000000f43120_0 .net "Result", 0 0, L_0000000000f8c800;  alias, 1 drivers
+L_0000000000f8c800 .cmp/gt 9, v0000000000f43260_0, v0000000000f42540_0;
+    .scope S_0000000000f450f0;
+T_0 ;
+    %pushi/vec4 341, 0, 9;
+    %store/vec4 v0000000000f43260_0, 0, 9;
+    %pushi/vec4 59, 0, 9;
+    %store/vec4 v0000000000f42540_0, 0, 9;
+    %end;
+    .thread T_0;
+    .scope S_0000000000f450f0;
+T_1 ;
+    %vpi_call 4 12 "$display", "%b", v0000000000f42c20_0 {0 0 0};
+    %vpi_call 4 14 "$finish" {0 0 0};
+    %end;
+    .thread T_1;
+# The file index is used to find the file name in the following table.
+:file_names 5;
+    "N/A";
+    "<interactive>";
+    "DayTime.v";
+    "TimeOfDayInHoursToBoolean_CL.v";
+    "TestBench.v";
