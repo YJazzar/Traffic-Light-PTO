@@ -21,10 +21,10 @@ module GetLargestLane (lane, out);
 
     // Add all adjacent lanes
     wire [3:0][8:0] laneSum;
-    Adder_8 one (lane[0], lane[1], laneSum[0]);
-    Adder_8 two (lane[2], lane[3], laneSum[1]);
+    Adder_8 one   (lane[0], lane[1], laneSum[0]);
+    Adder_8 two   (lane[2], lane[3], laneSum[1]);
     Adder_8 three (lane[4], lane[5], laneSum[2]);
-    Adder_8 four (lane[6], lane[7], laneSum[3]);
+    Adder_8 four  (lane[6], lane[7], laneSum[3]);
 
     // Wire holding results of comparator 
     wire [2:0] mgResult;
