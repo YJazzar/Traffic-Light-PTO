@@ -66,7 +66,7 @@ goto error
 :compile
     echo Compiling source files...
     iverilog -o "%filename%" *.v 
-    echo Run Completed!
+    echo Compile Completed!
     goto end
 
 :default
