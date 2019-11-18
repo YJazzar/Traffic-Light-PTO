@@ -21,8 +21,9 @@ module TrafficMode (clk, timeSignal, pedSignal, emgSignal, trafficModeOutput);
     //  LOCAL VARIABLES
     wire [1:0] nextState;
 
-    //assign nextState = 
+    assign nextState = {{pedSignal | emgSignal}, 
+                        {(~timeSignal & ~pedSignal) | emgSignal}};
 
-    DFF #(2) trafficMode(clk, ,trafficModeOutput);
-    
+    DFF #(2) trafficMode(clk, nextState,trafficModeOutput);
+
 endmodule
