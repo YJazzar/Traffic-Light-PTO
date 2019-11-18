@@ -1,6 +1,9 @@
 
 @echo off
 cls
+@echo.
+@echo ------ NEW RUN ------
+@echo.
 for /f "tokens=2 delims==" %%a in ('wmic OS Get localdatetime /value') do set "dt=%%a"
 set "YY=%dt:~2,2%" & set "YYYY=%dt:~0,4%" & set "MM=%dt:~4,2%" & set "DD=%dt:~6,2%"
 set "HH=%dt:~8,2%" & set "Min=%dt:~10,2%" & set "Sec=%dt:~12,2%"
@@ -65,14 +68,14 @@ goto error
 
 :compile
     echo Compiling source files...
-    iverilog -o "%filename%" *.v 
+    iverilog -o "%filename%" ./src/*.v 
     echo Compile Completed!
     goto end
 
 :default
     :: Compiles and runs the file in one step
     echo Compiling source files...
-    iverilog -o "%filename%" *.v 
+    iverilog -o "%filename%" ./src/*.v 
     echo Running file: %filename%
     vvp "%filename%"
     echo Run Completed!

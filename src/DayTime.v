@@ -14,6 +14,13 @@
  *      out = 0010 -> lane = E
  *      out = 0100 -> lane = S
  *      out = 1000 -> lane = W
+ *      
+ 
+ 
+        out = 0001 -> lane = 
+ *      out = 0010 -> lane = 
+ *      out = 0100 -> lane = E
+ *      out = 1000 -> lane = N
  */
 module GetLargestLane (lane, out);
     input [7:0][7:0] lane;
@@ -21,10 +28,10 @@ module GetLargestLane (lane, out);
 
     // Add all adjacent lanes
     wire [3:0][8:0] laneSum;
-    Adder_8 one (lane[0], lane[1], laneSum[0]);
-    Adder_8 two (lane[2], lane[3], laneSum[1]);
-    Adder_8 three (lane[4], lane[5], laneSum[2]);
-    Adder_8 four (lane[6], lane[7], laneSum[3]);
+    Adder_8 one   (lane[0], lane[1], laneSum[0]);   // Add North lanes
+    Adder_8 two   (lane[2], lane[3], laneSum[1]);   // Add East lanes
+    Adder_8 three (lane[4], lane[5], laneSum[2]);   // Add South lanes
+    Adder_8 four  (lane[6], lane[7], laneSum[3]);   // Add West lanes
 
     // Wire holding results of comparator 
     wire [2:0] mgResult;
@@ -32,13 +39,13 @@ module GetLargestLane (lane, out);
     wire [1:0][8:0] intermediateMax;
 
     // Compare the first two lanes (North and East)
-    MagnitudeComparator mg1 (laneSum[0], laneSum[1], mgResult[0]);
-    MagnitudeComparator mg2 (laneSum[2], laneSum[3], mgResult[1]);
+    MagnitudeComparator mg1 (laneSum[0], laneSum[1], mgResult[0]);  // mgResult[0] = laneSum[0] > laneSum[1] = North > East
+    MagnitudeComparator mg2 (laneSum[2], laneSum[3], mgResult[1]);  // mgResult[1] = laneSum[2] > laneSum[3] = South > West
 
     // Get the max lane from mg1
-    Mux2Ch mux1 (laneSum[0], laneSum[1], {mgResult[0], ~mgResult[0]}, intermediateMax[0]);
-    // Get the max lane from mg1
-    Mux2Ch mux2 (laneSum[2], laneSum[3], {mgResult[1], ~mgResult[1]}, intermediateMax[1]);
+    Mux2Ch mux1 (laneSum[0], laneSum[1], {~mgResult[0], mgResult[0]}, intermediateMax[0]);
+    // Get the max lane from mg2
+    Mux2Ch mux2 (laneSum[2], laneSum[3], {~mgResult[1], mgResult[1]}, intermediateMax[1]);
 
     MagnitudeComparator mg3 (intermediateMax[0], intermediateMax[1], mgResult[2]);
 
@@ -49,7 +56,7 @@ module GetLargestLane (lane, out);
     assign temp[1] = ~mgResult[0] & mgResult[2];
     assign temp[2] = temp[0] | temp[1];
 
-    assign out = {~mgResult[2], temp[2]};
+    assign out = {mgResult[2], ~temp[2]};
     
 
 endmodule  
@@ -120,10 +127,10 @@ module Decoder(largest, out);
 	input [1:0] largest;
 	output [3:0] out;
 
-	assign out[0] = ~largest[0] & ~largest[1];
-    assign out[1] = ~largest[0] &  largest[1];
-    assign out[2] =  largest[0] & ~largest[1];
-    assign out[3] =  largest[0] &  largest[1];
+	assign out[0] = ~largest[1] & ~largest[0];
+    assign out[1] = ~largest[1] &  largest[0];
+    assign out[2] =  largest[1] & ~largest[0];
+    assign out[3] =  largest[1] &  largest[0];
 endmodule
 
 module DecoderToLights (inFromDecoder, outToLights);

@@ -7,6 +7,7 @@ module LeftArbiter4bit (in, oneHotOut);
 endmodule  
 //----------------------------------------------------------------------
 
+/*
 module testbench();
   reg  [4:0] i;
   reg Emergency;
@@ -38,4 +39,5 @@ module testbench();
   end
   
 endmodule
+*/
 

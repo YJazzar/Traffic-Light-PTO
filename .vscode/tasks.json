@@ -42,7 +42,11 @@
         {
             "label": "Run Previous",
             "type": "shell",
-            "command": "run.bat -compile"
+            "command": "run.bat -run",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ]
 }
