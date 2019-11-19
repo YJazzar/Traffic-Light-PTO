@@ -1,7 +1,9 @@
 module testbench();
 
-	//clock signal
+	//LOCAL VARIABLES
 	reg clk;
+
+	//  THREAD WITH CLOCK CONTROL
 	initial begin
 		forever begin
 			#5 
