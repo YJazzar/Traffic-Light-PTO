@@ -11,6 +11,7 @@ module DFF #(parameter REGISTER_WIDTH = 1) (clk,in,out);
     out = in;
  endmodule
 
+//  MODULES TO CONTROL THE TRAFFIC MODE
 module TrafficMode (clk, timeSignal, pedSignal, emgSignal, trafficModeOutput);
 
     //  INPUT
@@ -24,6 +25,5 @@ module TrafficMode (clk, timeSignal, pedSignal, emgSignal, trafficModeOutput);
     assign nextState = {{pedSignal | emgSignal}, 
                         {(~timeSignal & ~pedSignal) | emgSignal}};
 
-    DFF #(2) trafficMode(clk, nextState,trafficModeOutput);
-
+    DFF #(2) trafficMode(clk, nextState, trafficModeOutput);
 endmodule
