@@ -3,6 +3,7 @@
 ***********************************************/
 
 /*
+
 module TrafficModeTestBreadboard (clk, timeSignal, pedSignal, emgSignal);
     //  INPUT
     input clk;
@@ -54,33 +55,33 @@ module TrafficModeTest ();
     begin
         #2
         #5 timeSignal = 0; pedSignal = 0; emgSignal = 0;
-        #5 $display("^Day Signal^");
-        #5 timeSignal = 1; pedSignal = 0; emgSignal = 0;
         #5 $display("^Night Signal^");
+        #5 timeSignal = 1; pedSignal = 0; emgSignal = 0;
+        #5 $display("^Day Signal^");
         #5 timeSignal = 0; pedSignal = 1; emgSignal = 0;
         #5 $display("^Ped Signal^");
         #5 timeSignal = 0; pedSignal = 0; emgSignal = 1;
         #5 $display("^Emg Signal^");
         #5 timeSignal = 0; pedSignal = 0; emgSignal = 0;
-        #5 $display("^Day Signal^");
-        #5 timeSignal = 1; pedSignal = 0; emgSignal = 0;
         #5 $display("^Night Signal^");
+        #5 timeSignal = 1; pedSignal = 0; emgSignal = 0;
+        #5 $display("^Day Signal^");
         #5 timeSignal = 0; pedSignal = 1; emgSignal = 0;
         #5 $display("^Ped Signal^");
         #5 timeSignal = 0; pedSignal = 0; emgSignal = 1;
         #5 $display("^Emg Signal^");
         #5 timeSignal = 0; pedSignal = 0; emgSignal = 0;
-        #5 $display("^Day Signal^");
-        #5 timeSignal = 1; pedSignal = 0; emgSignal = 0;
         #5 $display("^Night Signal^");
+        #5 timeSignal = 1; pedSignal = 0; emgSignal = 0;
+        #5 $display("^Day Signal^");
         #5 timeSignal = 0; pedSignal = 1; emgSignal = 0;
         #5 $display("^Ped Signal^");
         #5 timeSignal = 0; pedSignal = 0; emgSignal = 1;
         #5 $display("^Emg Signal^");
         #5 timeSignal = 0; pedSignal = 0; emgSignal = 0;
-        #5 $display("^Day Signal^");
-        #5 timeSignal = 1; pedSignal = 0; emgSignal = 0;
         #5 $display("^Night Signal^");
+        #5 timeSignal = 1; pedSignal = 0; emgSignal = 0;
+        #5 $display("^Day Signal^");
         #5 timeSignal = 0; pedSignal = 1; emgSignal = 0;
         #5 $display("^Ped Signal^");
         #5 timeSignal = 0; pedSignal = 0; emgSignal = 1;
@@ -88,4 +89,5 @@ module TrafficModeTest ();
         $finish;
     end
 endmodule
+
 */
