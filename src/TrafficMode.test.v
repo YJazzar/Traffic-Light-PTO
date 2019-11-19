@@ -2,6 +2,7 @@
     THESE ARE TESTS FOR THE TRAFFIC MODE MODULE
 ***********************************************/
 
+/*
 module TrafficModeTestBreadboard (clk, timeSignal, pedSignal, emgSignal);
     //  INPUT
     input clk;
@@ -87,3 +88,4 @@ module TrafficModeTest ();
         $finish;
     end
 endmodule
+*/
