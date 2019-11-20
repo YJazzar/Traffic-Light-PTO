@@ -5,8 +5,8 @@ module Emergency(emergencyLane, laneOutput);
     //  OUTPUTS
     output [0:7] laneOutput;
 
-    assign laneOutput = {{emergencyLane[3]}, {emergencyLane[3]},
-                         {emergencyLane[2]}, {emergencyLane[2]},
+    assign laneOutput = {{emergencyLane[0]}, {emergencyLane[0]},
                          {emergencyLane[1]}, {emergencyLane[1]},
-                         {emergencyLane[0]}, {emergencyLane[0]}};
+                         {emergencyLane[2]}, {emergencyLane[2]},
+                         {emergencyLane[3]}, {emergencyLane[3]}};
 endmodule
