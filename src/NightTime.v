@@ -52,6 +52,7 @@ module NightTime(clk, rst, laneOutput);
 
 endmodule
 
+/*
 //=============================================
 // Test Bench
 //=============================================
@@ -111,3 +112,4 @@ module Test_FSM() ;
 		$finish;
 	end
 endmodule
+*/
