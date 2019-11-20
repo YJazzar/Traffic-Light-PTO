@@ -15,18 +15,12 @@
  *      out = 0100 -> lane = S
  *      out = 1000 -> lane = W
  *      
- 
- 
-        out = 0001 -> lane = 
- *      out = 0010 -> lane = 
- *      out = 0100 -> lane = E
- *      out = 1000 -> lane = N
  */
 module GetLargestLane (lane, out);
     input [7:0][7:0] lane;
     output [1:0] out;
 
-    // Add all adjacent lanes
+    // Add all adjacent lanes  
     wire [3:0][8:0] laneSum;
     Adder_8 one   (lane[0], lane[1], laneSum[0]);   // Add North lanes
     Adder_8 two   (lane[2], lane[3], laneSum[1]);   // Add East lanes
@@ -104,16 +98,6 @@ module Adder_8 (A, B, Result);
     assign Result = A + B;
 endmodule
 
-module D_Flip_Flop (clk, in, out);
-    input   clk;
-    input   in;
-    output  out;
-    reg     out;
-
-    always @(posedge clk)
-        out = in;
-
-endmodule
 
 /*  @return the 1-Hot number corrosponding to the lane with the 
  *          largest number of cars present.
@@ -147,9 +131,9 @@ endmodule
 //----------------------------------------------------------------------
 
 
-module DayTime (lane, clk, laneOutput);
+module DayTime (lane, clk, enable, laneOutput);
     input [7:0][7:0] lane;
-    input clk;
+    input clk, enable;
     output [7:0] laneOutput;
 
     // A 2 bit wire (from GetLargestLane Module) that gets stored into D-Flip-Flops
@@ -158,8 +142,8 @@ module DayTime (lane, clk, laneOutput);
 
     // Feed the output of GetLargestLane module into the D-Flip-Flop
     wire [1:0] currMax;
-    D_Flip_Flop dffHighBit (clk, largestOut[1], currMax[1]);
-    D_Flip_Flop dffLowBit (clk, largestOut[0], currMax[0]);
+    DFF dffHighBit (clk, largestOut[1], currMax[1]);
+    DFF dffLowBit (clk, largestOut[0], currMax[0]);
 
     // Get the 1-hot for which lane to turn on
     wire [3:0] decOut;
@@ -167,6 +151,6 @@ module DayTime (lane, clk, laneOutput);
 
     wire [7:0] temp;
     DecoderToLights decToLights (decOut, temp);
-    assign laneOutput = temp;
+    assign laneOutput = {8{enable}} & temp;
 
 endmodule
