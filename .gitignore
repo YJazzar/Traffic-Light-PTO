@@ -1,2 +1,2 @@
 #So that our bin bin files aren't constantly pushed to the project
-./bin
+./bin/*.out
