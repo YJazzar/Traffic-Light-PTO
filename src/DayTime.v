@@ -1,5 +1,5 @@
 /*  @return the 1-Hot number corrosponding to the lane with the 
- *          largest number of cars present.
+ *  largest number of cars present.
  *  Where:
  *      lane[0] = N1
  *      lane[1] = N2
@@ -15,12 +15,6 @@
  *      out = 0100 -> lane = S
  *      out = 1000 -> lane = W
  *      
- 
- 
-        out = 0001 -> lane = 
- *      out = 0010 -> lane = 
- *      out = 0100 -> lane = E
- *      out = 1000 -> lane = N
  */
 module GetLargestLane (lane, out);
     input [7:0][7:0] lane;
@@ -104,16 +98,6 @@ module Adder_8 (A, B, Result);
     assign Result = A + B;
 endmodule
 
-module D_Flip_Flop (clk, in, out);
-    input   clk;
-    input   in;
-    output  out;
-    reg     out;
-
-    always @(posedge clk)
-        out = in;
-
-endmodule
 
 /*  @return the 1-Hot number corrosponding to the lane with the 
  *          largest number of cars present.
@@ -144,25 +128,93 @@ module DecoderToLights (inFromDecoder, outToLights);
                         inFromDecoder[0], inFromDecoder[0]};
 endmodule
 
+module EqualTo (A, B, result);
+    parameter n = 8;
+    input [n-1:0] A, B;
+    output result;
+
+    assign result = (A == B);
+
+endmodule
+
 //----------------------------------------------------------------------
 
-
-module DayTime (lane, clk, laneOutput);
+/*
+ *  This Module will figure out the repective enable lines for: Day-time, Night-time, Pedestrian, and Emergency
+ *  @param:
+ *      Inputs:
+ *          clk -> Clock signal
+ *          lane -> 8 bits for each lane, where:
+ *                  lane[0] = N1
+ *                  lane[1] = N2
+ *                  lane[2] = E1
+ *                  lane[3] = E2
+ *                  lane[4] = S1
+ *                  lane[5] = S2
+ *                  lane[6] = W1
+ *                  lane[7] = W2  
+ *
+ *      Outputs:
+ *          laneOutput -> an 8-bit value for each traffic light, where:
+ *                  out = 00000011 -> lane = N
+ *                  out = 00001100 -> lane = E
+ *                  out = 00110000 -> lane = S
+ *                  out = 11000000 -> lane = W
+ * 
+ *      local variables:
+ *          currMax -> The current "state" of the traffic signals (this will feed into the decoder)
+ *          nextMax -> What the next "state"" of the traffic light signals will be
+ *          largestLane -> an itnermediate value between currMax and nextMax to ensure no duplicates happen
+ *          decOut -> Changing the "state" of the traffic light signals to an actual output that can be sent to them (by using a decoder)
+ */
+module DayTime (clk, lane, laneOutput);
     input [7:0][7:0] lane;
     input clk;
     output [7:0] laneOutput;
 
-    // A 2 bit wire (from GetLargestLane Module) that gets stored into D-Flip-Flops
-    wire [1:0] largestOut;
-    GetLargestLane largest (lane, largestOut);
-
-    // Feed the output of GetLargestLane module into the D-Flip-Flop
+    wire [1:0] largestLane;
+    wire [1:0] secondLargestLane;
+    wire [3:0] decOut;
     wire [1:0] currMax;
-    D_Flip_Flop dffHighBit (clk, largestOut[1], currMax[1]);
-    D_Flip_Flop dffLowBit (clk, largestOut[0], currMax[0]);
+    wire [7:0][7:0] newLane;
+
+  
+    
+    // North lanes
+    assign newLane[0] = {8{~decOut[3]}} & lane[0];
+    assign newLane[1] = {8{~decOut[3]}} & lane[1];
+    // East lanes
+    assign newLane[2] = {8{~decOut[2]}} & lane[2];
+    assign newLane[3] = {8{~decOut[2]}} & lane[3];
+    // South lanes
+    assign newLane[4] = {8{~decOut[1]}} & lane[4];
+    assign newLane[5] = {8{~decOut[1]}} & lane[5];
+    // West lanes
+    assign newLane[6] = {8{~decOut[0]}} & lane[6];
+    assign newLane[7] = {8{~decOut[0]}} & lane[7];
+
+   
+    // A 2 bit wire (from GetLargestLane Module) that gets the largest lane
+    GetLargestLane largest (lane, largestLane);
+    // A 2 bit wire (from GetLargestLane Module) that gets the second-largest lane
+    GetLargestLane secondLargest (newLane, secondLargestLane);
+
+
+    // If largestLane == currMax -> currMax = secondLargest; else -> currMax = largestLane
+    wire temp2;
+    wire change;
+    EqualTo #(2) equal (largestLane, currMax, temp2);
+    SpecialDFF #(1) ch (~clk, temp2, change);
+    // Find out the value of nextMax
+    wire [1:0] nextMax;
+    Mux2Ch #(2) mux (largestLane, secondLargestLane, {change, ~change}, nextMax);
+    // assign nextMax = largestLane;
+    // Feed the output of GetLargestLane module into the D-Flip-Flop
+    
+    SpecialDFF dffHighBit (clk, nextMax[1], currMax[1]);
+    SpecialDFF dffLowBit (clk, nextMax[0], currMax[0]);
 
     // Get the 1-hot for which lane to turn on
-    wire [3:0] decOut;
     Decoder dec (currMax, decOut);
 
     wire [7:0] temp;
@@ -170,3 +222,4 @@ module DayTime (lane, clk, laneOutput);
     assign laneOutput = temp;
 
 endmodule
+
