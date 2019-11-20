@@ -4,6 +4,7 @@
  *  @param:
  *      Inputs:
  *          clk -> Clock signal
+ *          rst -> Reset signal
  *          pedSignal -> Will be true if there is a pedestrian
  *          emgSignal -> Will be true if there is an emergency vehicle
  *          dayTime -> Will be true if it is currently Day or false if it is Night
@@ -16,18 +17,22 @@
  *                            Pedestrian =  10
  *                            Emergency  =  11
  */
-module TrafficMode (clk, timeSignal, pedSignal, emgSignal, currentState);
+module TrafficMode (clk, rst, timeSignal, pedSignal, emgSignal, currentState);
 
     //  INPUT
-    input clk;
+    input clk, rst;
     input timeSignal, pedSignal, emgSignal;
     output [1:0] currentState;
 
     //  LOCAL VARIABLES
     wire [1:0] nextState;
+    wire [1:0] nextTrafficMode;
+    wire [1:0] resetState = 2'b00;
 
     assign nextState = {{pedSignal | emgSignal}, 
                         {(~timeSignal & ~pedSignal) | emgSignal}};
 
-    DFF #(2) trafficMode(clk, nextState, currentState);
+    Mux2 #(2) inputMux(resetState, nextState, {rst, ~rst}, nextTrafficMode);
+
+    DFF #(2) trafficMode(clk, nextTrafficMode, currentState);
 endmodule

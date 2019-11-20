@@ -3,27 +3,26 @@
 ***********************************************/
 
 /*
-
-module TrafficModeTestBreadboard (clk, timeSignal, pedSignal, emgSignal);
+module TrafficModeTestBreadboard (clk, rst, timeSignal, pedSignal, emgSignal);
     //  INPUT
-    input clk;
+    input clk, rst;
     input timeSignal, pedSignal, emgSignal;
 
     //  LOCAL VARIABLES
     wire [1:0] trafficMode;
 
-    TrafficMode TM (clk, timeSignal, pedSignal, emgSignal, trafficMode);
+    TrafficMode TM (clk, rst, timeSignal, pedSignal, emgSignal, trafficMode);
 endmodule
 
 module TrafficModeTest ();
     //  REGISTERS
-    reg clk;
+    reg clk, rst;
     reg timeSignal;
     reg pedSignal;
     reg emgSignal;
 
     //  BREADBOARD
-    TrafficModeTestBreadboard TMTB(clk, timeSignal, pedSignal, emgSignal);
+    TrafficModeTestBreadboard TMTB(clk, rst, timeSignal, pedSignal, emgSignal);
 
     //  THREAD WITH CLOCK CONTROL
     initial
@@ -41,12 +40,12 @@ module TrafficModeTest ();
     initial
     begin
         #2
-        $display("CLK|TIME|PED|EMG|OUT");
-        $display("---+----+---+---+---");
+        $display("CLK|RST|TIME|PED|EMG|OUT");
+        $display("---+---+----+---+---+---");
         forever
             begin
                 #5
-                $display("%1b  |%1b   |%1b  |%1b  |%2b", clk, timeSignal, pedSignal, emgSignal, TMTB.trafficMode);
+                $display("%1b  |%1b  |%1b  |%1b  |%1b  |%2b", clk, rst, timeSignal, pedSignal, emgSignal, TMTB.trafficMode);
             end
     end
 
@@ -54,37 +53,39 @@ module TrafficModeTest ();
     initial
     begin
         #2
-        #5 timeSignal = 0; pedSignal = 0; emgSignal = 0;
+        #5 timeSignal = 0; rst = 1; pedSignal = 0; emgSignal = 0;
+        #5 $display("^rst Signal^");
+        #5 timeSignal = 0; rst = 0; pedSignal = 0; emgSignal = 0;
         #5 $display("^Night Signal^");
-        #5 timeSignal = 1; pedSignal = 0; emgSignal = 0;
+        #5 timeSignal = 1; rst = 0; pedSignal = 0; emgSignal = 0;
         #5 $display("^Day Signal^");
-        #5 timeSignal = 0; pedSignal = 1; emgSignal = 0;
+        #5 timeSignal = 0; rst = 0; pedSignal = 1; emgSignal = 0;
         #5 $display("^Ped Signal^");
-        #5 timeSignal = 0; pedSignal = 0; emgSignal = 1;
+        #5 timeSignal = 0; rst = 0; pedSignal = 0; emgSignal = 1;
         #5 $display("^Emg Signal^");
-        #5 timeSignal = 0; pedSignal = 0; emgSignal = 0;
+        #5 timeSignal = 0; rst = 0; pedSignal = 0; emgSignal = 0;
         #5 $display("^Night Signal^");
-        #5 timeSignal = 1; pedSignal = 0; emgSignal = 0;
+        #5 timeSignal = 1; rst = 0; pedSignal = 0; emgSignal = 0;
         #5 $display("^Day Signal^");
-        #5 timeSignal = 0; pedSignal = 1; emgSignal = 0;
+        #5 timeSignal = 0; rst = 0; pedSignal = 1; emgSignal = 0;
         #5 $display("^Ped Signal^");
-        #5 timeSignal = 0; pedSignal = 0; emgSignal = 1;
+        #5 timeSignal = 0; rst = 0; pedSignal = 0; emgSignal = 1;
         #5 $display("^Emg Signal^");
-        #5 timeSignal = 0; pedSignal = 0; emgSignal = 0;
+        #5 timeSignal = 0; rst = 0; pedSignal = 0; emgSignal = 0;
         #5 $display("^Night Signal^");
-        #5 timeSignal = 1; pedSignal = 0; emgSignal = 0;
+        #5 timeSignal = 1; rst = 0; pedSignal = 0; emgSignal = 0;
         #5 $display("^Day Signal^");
-        #5 timeSignal = 0; pedSignal = 1; emgSignal = 0;
+        #5 timeSignal = 0; rst = 0; pedSignal = 1; emgSignal = 0;
         #5 $display("^Ped Signal^");
-        #5 timeSignal = 0; pedSignal = 0; emgSignal = 1;
+        #5 timeSignal = 0; rst = 0; pedSignal = 0; emgSignal = 1;
         #5 $display("^Emg Signal^");
-        #5 timeSignal = 0; pedSignal = 0; emgSignal = 0;
+        #5 timeSignal = 0; rst = 0; pedSignal = 0; emgSignal = 0;
         #5 $display("^Night Signal^");
-        #5 timeSignal = 1; pedSignal = 0; emgSignal = 0;
+        #5 timeSignal = 1; rst = 0; pedSignal = 0; emgSignal = 0;
         #5 $display("^Day Signal^");
-        #5 timeSignal = 0; pedSignal = 1; emgSignal = 0;
+        #5 timeSignal = 0; rst = 0; pedSignal = 1; emgSignal = 0;
         #5 $display("^Ped Signal^");
-        #5 timeSignal = 0; pedSignal = 0; emgSignal = 1;
+        #5 timeSignal = 0; rst = 0; pedSignal = 0; emgSignal = 1;
         #5 $display("^Emg Signal^");
         $finish;
     end
