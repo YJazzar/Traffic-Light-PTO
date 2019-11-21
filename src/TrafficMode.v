@@ -27,7 +27,7 @@ module TrafficMode (clk, rst, timeSignal, pedSignal, emgSignal, currentState);
     //  LOCAL VARIABLES
     wire [1:0] nextState;
     wire [1:0] nextTrafficMode;
-    wire [1:0] resetState = 2'b00;
+    wire [1:0] resetState = 2'b01;
 
     assign nextState = {{pedSignal | emgSignal}, 
                         {(~timeSignal & ~pedSignal) | emgSignal}};
