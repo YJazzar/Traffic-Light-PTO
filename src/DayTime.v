@@ -50,7 +50,7 @@ module GetLargestLane (lane, out);
     assign temp[1] = ~mgResult[0] & mgResult[2];
     assign temp[2] = temp[0] | temp[1];
 
-    assign out = {mgResult[2], ~temp[2]};
+    assign out = {~mgResult[2], temp[2]};
     
 
 endmodule  
@@ -162,17 +162,17 @@ module DayTime (clk, lane, laneOutput);
   
     
     // North lanes
-    assign newLane[0] = {8{~decOut[3]}} & lane[0];
-    assign newLane[1] = {8{~decOut[3]}} & lane[1];
-    // East lanes
-    assign newLane[2] = {8{~decOut[2]}} & lane[2];
-    assign newLane[3] = {8{~decOut[2]}} & lane[3];
-    // South lanes
-    assign newLane[4] = {8{~decOut[1]}} & lane[4];
-    assign newLane[5] = {8{~decOut[1]}} & lane[5];
-    // West lanes
-    assign newLane[6] = {8{~decOut[0]}} & lane[6];
-    assign newLane[7] = {8{~decOut[0]}} & lane[7];
+    assign newLane[0] = {8{~laneOutput[0]}} & lane[0];
+    assign newLane[1] = {8{~laneOutput[1]}} & lane[1];
+    // East lanes  
+    assign newLane[2] = {8{~laneOutput[2]}} & lane[2];
+    assign newLane[3] = {8{~laneOutput[3]}} & lane[3];
+    // South lanes  
+    assign newLane[4] = {8{~laneOutput[4]}} & lane[4];
+    assign newLane[5] = {8{~laneOutput[5]}} & lane[5];
+    // West lanes  
+    assign newLane[6] = {8{~laneOutput[6]}} & lane[6];
+    assign newLane[7] = {8{~laneOutput[7]}} & lane[7];
 
    
     // A 2 bit wire (from GetLargestLane Module) that gets the largest lane
@@ -182,16 +182,16 @@ module DayTime (clk, lane, laneOutput);
 
 
     // If largestLane == currMax -> currMax = secondLargest; else -> currMax = largestLane
-    wire temp2;
+    wire equalResult;
     wire change;
-    EqualTo #(2) equal (largestLane, currMax, temp2);
+    EqualTo #(2) equal (largestLane, currMax, eqaulResult);
     SpecialDFF #(1) ch (~clk, temp2, change);
+
     // Find out the value of nextMax
     wire [1:0] nextMax;
     Mux2Ch #(2) mux (largestLane, secondLargestLane, {change, ~change}, nextMax);
-    // assign nextMax = largestLane;
-    // Feed the output of GetLargestLane module into the D-Flip-Flop
     
+    // Feed the output of GetLargestLane module into the D-Flip-Flop
     SpecialDFF dffHighBit (clk, nextMax[1], currMax[1]);
     SpecialDFF dffLowBit (clk, nextMax[0], currMax[0]);
 

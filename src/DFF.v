@@ -19,7 +19,7 @@ module SpecialDFF #(parameter REGISTER_WIDTH = 1) (clk,in,out);
   output [REGISTER_WIDTH-1:0] out;
   reg    [REGISTER_WIDTH-1:0] out;
   
-  initial out = 1;
+  initial out = 0;
 
   always @(posedge clk)//<--This is the statement that makes the circuit behave with TIME
     out = in;
