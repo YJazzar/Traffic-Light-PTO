@@ -12,8 +12,8 @@ module TestBreadboard (clk, rst, timeSignal, pedSignal, emgSignal, emgLane);
 
     //  LOCAL VARIABLES
     wire [1:0] trafficMode;
-    wire walkingLightOutout;
     wire [3:0] trafficModeOneHot;
+    wire [7:0] walkingLightOutput;
     wire [7:0] emergencyLightOutput;
     wire [7:0] pedestrianLightOutput;
     wire [7:0] nightTimeLightOutput;
@@ -22,7 +22,7 @@ module TestBreadboard (clk, rst, timeSignal, pedSignal, emgSignal, emgLane);
     wire [7:0] trafficLightOutput;
 
     //  TRAFFIC MODE MODULES
-    Pedestrian PedestrianModule (walkingLightOutput, pedestrianLightOutput);
+    Pedestrian PedestrianModule (pedSignal, walkingLightOutput, pedestrianLightOutput);
     Emergency EmergencyModule (emgLane, emergencyLightOutput);
     assign nightTimeLightOutput = 8'b00000000;
     assign dayTimeLightOutput = 8'b00000000;
@@ -78,15 +78,16 @@ module TestTestBench ();
         forever
             begin
                 #5
-                $display("---+---+---+-----+---+---+---+---+----+---+---+---+---+---+----+---+---+---");
-                $display("---+---+---+-----+---+---+---+---+----+---+---+---+---+---+----+---+---+---");
+                $display("---+---+---+-----+---+---+----+--------+----+---+---+---+---+---+----+---+---+---");
+                $display("---+---+---+-----+---+---+----+--------+----+---+---+---+---+---+----+---+---+---");
+                $display("                                                              ");
                 $display("                            N                                 ");
                 $display("            S1: %8b                                           ", s1);
                 $display("            S2: %8b                                           ", s2);
                 $display("                  |   |   |###|   |   |                       ");
                 $display("                  |   |   |###|   |   |                       ");
                 $display("                  |   |   |###|   |   |                       ");
-                $display("                  |   |   |###| %1b | %1b |                   ", TB.trafficLightOutput[6], TB.trafficLightOutput[7]);
+                $display("                %1b%1b|   |   |###| %1b | %1b |%1b%1b         ", TB.walkingLightOutput[6], TB.walkingLightOutput[0], TB.trafficLightOutput[6], TB.trafficLightOutput[7], TB.walkingLightOutput[4], TB.walkingLightOutput[7]);
                 $display("     -------------         ---         -------------          ");
                 $display("                 %1b                              W1: %8b     ", TB.trafficLightOutput[0], w1);
                 $display("     -------------         ---         -------------          ");
@@ -100,14 +101,15 @@ module TestTestBench ();
                 $display("     -------------         ---         -------------          ");
                 $display("     E2: %8b                      %1b                         ", e2, TB.trafficLightOutput[5]);
                 $display("     -------------         ---         -------------          ");
-                $display("                  | %1b | %1b |###|   |   |                   ", TB.trafficLightOutput[2], TB.trafficLightOutput[3]);
+                $display("                %1b%1b| %1b | %1b |###|   |   |%1b%1b         ", TB.walkingLightOutput[2], TB.walkingLightOutput[1], TB.trafficLightOutput[2], TB.trafficLightOutput[3], TB.walkingLightOutput[5], TB.walkingLightOutput[3]);
                 $display("                  |   |   |###|   |   |                       ");
                 $display("                  |   |   |###|   |   |                       ");
                 $display("                  |   |   |###|   |   |                       ");
                 $display("                                 N1: %8b                      ", n1);
                 $display("                                 N2: %8b                      ", n2);
                 $display("                            S                                 ");
-                $display("---+---+---+-----+---+---+---+---+----+---+---+---+---+---+----+---+---+---");
+                $display("                                                              ");
+                $display("---+---+---+-----+---+---+----+--------+----+---+---+---+---+---+----+---+---+---");
                 $display("CLK|RST|DAY|NIGHT|PED|EMG|MODE|EMG_LANE");
                 $display("---+---+---+-----+---+---+----+--------");
                 $display("%1b  |%1b  |%1b   |%1b   |%1b  |%1b  |%2b  |%8b", clk, rst, ~rst, timeSignal, pedSignal, emgSignal, TB.trafficMode, emgLane);
@@ -120,12 +122,23 @@ module TestTestBench ();
     begin
         #2
         #5 rst = 1; timeSignal = 0; pedSignal = 0; emgSignal = 0;
-        #5 $display("RESET SIGNAL");
+        #5 $display("+--------------+");
+           $display("| RESET SIGNAL |");
+           $display("+--------------+");
         #5 rst = 0; timeSignal = 0; pedSignal = 0; emgSignal = 1;
            w1 = 8'b00000000; w2 = 8'b00000000; s1 = 8'b00000000; s2 = 8'b00000000;
            e1 = 8'b00000000; e2 = 8'b00000000; n1 = 8'b10000000; n2 = 8'b00000000;
            emgLane = 8'b00001000;
-        #5 $display("EMERGENCY SIGNAL");
+        #5 $display("+------------------+");
+           $display("| EMERGENCY SIGNAL |");
+           $display("+------------------+");
+        #5 rst = 0; timeSignal = 0; pedSignal = 1; emgSignal = 0;
+           w1 = 8'b00000000; w2 = 8'b00000000; s1 = 8'b00000000; s2 = 8'b00000000;
+           e1 = 8'b00000000; e2 = 8'b00000000; n1 = 8'b10000000; n2 = 8'b00000000;
+           emgLane = 8'b00001000;
+        #5 $display("+-------------------+");
+           $display("| PEDESTRIAN SIGNAL |");
+           $display("+-------------------+");
         $finish;
     end
 endmodule
