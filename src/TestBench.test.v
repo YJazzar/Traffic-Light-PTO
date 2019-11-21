@@ -2,6 +2,8 @@
     THESE ARE TESTS FOR THE TEST BENCH
 ***********************************************/
 
+/*
+
 module TestBreadboard (clk, rst, timeSignal, pedSignal, emgSignal, emgLane);
     //  INPUT
     input clk, rst;
@@ -127,3 +129,5 @@ module TestTestBench ();
         $finish;
     end
 endmodule
+
+*/
