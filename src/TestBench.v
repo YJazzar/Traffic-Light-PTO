@@ -111,21 +111,27 @@ module DayTimeTestBench();
   
     DayTime dt(clk, carCounts, laneOutput);
 	
+	integer f;
+
 	//display output
     initial begin
+		f = $fopen("output.txt","w");
+		$fwrite(f, "-----------------------------------\n");
 		#1
 		forever begin
 		#5
-			$display("Curr Max: %b -- next Max: %b -- change (if old == new): %b", dt.currMax, dt.nextMax, dt.change);
-			$display("largest: %b -- second largest: %b", dt.largestLane, dt.secondLargestLane);
-			$display("N1:%8d  N2:%8d\nE1:%8d  E2:%8d\nS1:%8d  S2:%8d\nW1:%8d  W2:%8d\nclk: %1b\nlights(NNEESSWW):%8b\n-----------------------------------",
+			$fwrite(f, "Curr Max: %b -- next Max: %b -- change (if old == new): %b\n", dt.currMax, dt.nextMax, dt.change);
+			$fwrite(f, "largest: %b -- second largest: %b\n", dt.largestLane, dt.secondLargestLane);
+			$fwrite(f, "N1:%8d  N2:%8d\nE1:%8d  E2:%8d\nS1:%8d  S2:%8d\nW1:%8d  W2:%8d\nclk: %1b\nlights(WWSSEENN):%8b\n-----------------------------------\n",
 															carCounts[0], carCounts[1], 
 															carCounts[2], carCounts[3],
 															carCounts[4], carCounts[5],
 															carCounts[6], carCounts[7],
 															clk,
 															laneOutput);
-		end														
+											
+		end			
+		$fclose(f);											
     end
 	
 	//input stimulus (changing number of cars)
@@ -152,7 +158,7 @@ module DayTimeTestBench();
 		carCounts[6] = 8'b00000010;carCounts[7] = 8'b00000000;
 		#10
 		carCounts[0] = 8'b10000100;carCounts[1] = 8'b10000000;
-		carCounts[2] = 8'b00001000;carCounts[3] = 8'b00000000;
+		carCounts[2] = 8'b01001000;carCounts[3] = 8'b10100000;
 		carCounts[4] = 8'b00001000;carCounts[5] = 8'b10000100;
 		carCounts[6] = 8'b00000010;carCounts[7] = 8'b10000000;
 		#20
