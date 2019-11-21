@@ -87,21 +87,21 @@ module TestTestBench ();
                 $display("                  |   |   |###|   |   |                       ");
                 $display("                  |   |   |###|   |   |                       ");
                 $display("                  |   |   |###|   |   |                       ");
-                $display("                %1b%1b|   |   |###| %1b | %1b |%1b%1b         ", TB.walkingLightOutput[6], TB.walkingLightOutput[0], TB.trafficLightOutput[6], TB.trafficLightOutput[7], TB.walkingLightOutput[4], TB.walkingLightOutput[7]);
+                $display("                %1b%1b|   |   |###| %1b | %1b |%1b%1b         ", TB.walkingLightOutput[6], TB.walkingLightOutput[0], TB.trafficLightOutput[0], TB.trafficLightOutput[1], TB.walkingLightOutput[4], TB.walkingLightOutput[7]);
                 $display("     -------------         ---         -------------          ");
-                $display("                 %1b                     W1: %8b              ", TB.trafficLightOutput[0], w1);
+                $display("                 %1b                     W1: %8b              ", TB.trafficLightOutput[6], w1);
                 $display("     -------------         ---         -------------          ");
-                $display("                 %1b                     W2: %8b              ", TB.trafficLightOutput[1], w2);
+                $display("                 %1b                     W2: %8b              ", TB.trafficLightOutput[7], w2);
                 $display("     -------------         ---         -------------          ");
                 $display("                  |   |   |###|       |                       ");
                 $display("  W               |   |   |###|       |                E      ");
                 $display("                  |   |   |###|       |                       ");
                 $display("     -------------         ---         -------------          ");
-                $display("     E1: %8b                      %1b                         ", e1, TB.trafficLightOutput[4]);
+                $display("     E1: %8b                      %1b                         ", e1, TB.trafficLightOutput[2]);
                 $display("     -------------         ---         -------------          ");
-                $display("     E2: %8b                      %1b                         ", e2, TB.trafficLightOutput[5]);
+                $display("     E2: %8b                      %1b                         ", e2, TB.trafficLightOutput[3]);
                 $display("     -------------         ---         -------------          ");
-                $display("                %1b%1b| %1b | %1b |###|   |   |%1b%1b         ", TB.walkingLightOutput[2], TB.walkingLightOutput[1], TB.trafficLightOutput[2], TB.trafficLightOutput[3], TB.walkingLightOutput[5], TB.walkingLightOutput[3]);
+                $display("                %1b%1b| %1b | %1b |###|   |   |%1b%1b         ", TB.walkingLightOutput[2], TB.walkingLightOutput[1], TB.trafficLightOutput[4], TB.trafficLightOutput[5], TB.walkingLightOutput[5], TB.walkingLightOutput[3]);
                 $display("                  |   |   |###|   |   |                       ");
                 $display("                  |   |   |###|   |   |                       ");
                 $display("                  |   |   |###|   |   |                       ");
@@ -142,5 +142,4 @@ module TestTestBench ();
         $finish;
     end
 endmodule
-
 */
