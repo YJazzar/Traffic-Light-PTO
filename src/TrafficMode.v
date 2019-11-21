@@ -22,6 +22,8 @@ module TrafficMode (clk, rst, timeSignal, pedSignal, emgSignal, currentState);
     //  INPUT
     input clk, rst;
     input timeSignal, pedSignal, emgSignal;
+
+    //  OUTPUT
     output [1:0] currentState;
 
     //  LOCAL VARIABLES
