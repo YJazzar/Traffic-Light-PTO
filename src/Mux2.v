@@ -12,3 +12,5 @@ module Mux2 #(parameter BUS_WIDTH = 1) (a1, a0, selector, out);
 	assign out = ({BUS_WIDTH{selector[1]}} & a1) |
                  ({BUS_WIDTH{selector[0]}} & a0) ;
 endmodule
+
+

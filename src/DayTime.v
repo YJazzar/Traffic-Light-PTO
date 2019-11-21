@@ -37,9 +37,9 @@ module GetLargestLane (lane, out);
     MagnitudeComparator mg2 (laneSum[2], laneSum[3], mgResult[1]);  // mgResult[1] = laneSum[2] > laneSum[3] = South > West
 
     // Get the max lane from mg1
-    Mux2Ch mux1 (laneSum[0], laneSum[1], {~mgResult[0], mgResult[0]}, intermediateMax[0]);
+    Mux2 #(9) mux1 (laneSum[1], laneSum[0], {~mgResult[0], mgResult[0]}, intermediateMax[0]);
     // Get the max lane from mg2
-    Mux2Ch mux2 (laneSum[2], laneSum[3], {~mgResult[1], mgResult[1]}, intermediateMax[1]);
+    Mux2 #(9) mux2 (laneSum[3], laneSum[2], {~mgResult[1], mgResult[1]}, intermediateMax[1]);
 
     MagnitudeComparator mg3 (intermediateMax[0], intermediateMax[1], mgResult[2]);
 
@@ -68,46 +68,8 @@ module MagnitudeComparator (A, B, Result);
     assign Result = A > B;
 endmodule
 
-/*  @return the chosen channel
- *  @param select -> a 1-Hot number to choose the channel
- */
-module Mux2Ch (channel0, channel1, select, out);
-    parameter BIT_WIDTH = 9;
-
-    input   [BIT_WIDTH-1:0]  channel0;
-    input   [BIT_WIDTH-1:0]  channel1;
-    input   [1:0]    select;
-    output  [BIT_WIDTH-1:0]  out;
-
-    assign out = ({BIT_WIDTH{select[1]}} & channel1) | ({BIT_WIDTH{select[0]}} & channel0);
-
-endmodule
 
 
-/* @return A + B
- * 
- * Where:
- *      A = 8 bits wide
- *      B = 8 bits wide
- *      Result = 9 bits wide
- */
-module Adder_8 (A, B, Result);
-    input [7:0] A, B;
-    output [8:0] Result;
-
-    assign Result = A + B;
-endmodule
-
-module DecoderToLights (inFromDecoder, outToLights);
-    input  [3:0] inFromDecoder;
-    output [7:0] outToLights;
-
-    //4 bit decoder onehot to 8 bit lights output
-    assign outToLights = {inFromDecoder[3], inFromDecoder[3], 
-                        inFromDecoder[2], inFromDecoder[2], 
-                        inFromDecoder[1], inFromDecoder[1], 
-                        inFromDecoder[0], inFromDecoder[0]};
-endmodule
 
 module EqualTo (A, B, result);
     parameter n = 8;
@@ -184,14 +146,15 @@ module DayTime (clk, lane, laneOutput);
     // If largestLane == currMax -> currMax = secondLargest; else -> currMax = largestLane
     wire equalResult;
     wire change;
-    EqualTo #(2) equal (largestLane, currMax, eqaulResult);
-    SpecialDFF #(1) ch (~clk, temp2, change);
+    EqualTo #(2) equal (largestLane, currMax, equalResult);
+    SpecialDFF #(1) ch (clk, equalResult, change);
 
     // Find out the value of nextMax
     wire [1:0] nextMax;
-    Mux2Ch #(2) mux (largestLane, secondLargestLane, {change, ~change}, nextMax);
-    
+    Mux2 #(2) mux (secondLargestLane, largestLane, {change, ~change}, nextMax);
+    // assign nextMax = largestLane;
     // Feed the output of GetLargestLane module into the D-Flip-Flop
+
     SpecialDFF dffHighBit (clk, nextMax[1], currMax[1]);
     SpecialDFF dffLowBit (clk, nextMax[0], currMax[0]);
 

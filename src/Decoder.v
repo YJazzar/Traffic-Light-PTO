@@ -15,3 +15,15 @@ module Decoder(largest, out);
     assign out[2] =  largest[1] & ~largest[0];
     assign out[3] =  largest[1] &  largest[0];
 endmodule
+
+
+module DecoderToLights (inFromDecoder, outToLights);
+    input  [3:0] inFromDecoder;
+    output [7:0] outToLights;
+
+    //4 bit decoder onehot to 8 bit lights output
+    assign outToLights = {inFromDecoder[3], inFromDecoder[3], 
+                        inFromDecoder[2], inFromDecoder[2], 
+                        inFromDecoder[1], inFromDecoder[1], 
+                        inFromDecoder[0], inFromDecoder[0]};
+endmodule
