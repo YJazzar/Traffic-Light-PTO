@@ -39,3 +39,15 @@ module SaturationCounter #(parameter COUNT_SIZE = 5) (clk, rst, up, down, load, 
     //  MUX TO FIND NEXT VALUE OF COUNT
     Mux4 #(COUNT_SIZE) mux(out, in, satDpOutPm1, {COUNT_SIZE{1'b0}}, {(~rst & ~up & ~down & ~load), (~rst & load), (~rst & (up | down)), rst}, next);
 endmodule
+
+
+module CountDownTimer (clk, rst, down, load, loadIn, currentCount);
+    parameter COUNT_SIZE = 7;
+    input clk, rst, down, load;
+    input [COUNT_SIZE-1:0] loadIn;
+    
+    output [COUNT_SIZE-1:0] currentCount;
+
+     SaturationCounter #(COUNT_SIZE) counter (clk, rst, 1'b0, down, load, 2'b0, 7'b0, loadIn, currentCount) ;
+
+endmodule
