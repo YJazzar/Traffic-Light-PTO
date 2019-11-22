@@ -2,39 +2,6 @@
     THESE ARE TESTS FOR THE TEST BENCH
 ***********************************************/
 
-module TestBreadboard (clk, rst, timeSignal, pedSignal, emgSignal, emgLane);
-    //  INPUT
-    input clk, rst;
-    input timeSignal, pedSignal, emgSignal;
-    input [7:0] emgLane;
-
-    //  LOCAL VARIABLES
-    wire [1:0] trafficMode;
-    wire [3:0] trafficModeOneHot;
-    wire [7:0] walkingLightOutput;
-    wire [7:0] emergencyLightOutput;
-    wire [7:0] pedestrianLightOutput;
-    wire [7:0] nightTimeLightOutput;
-    wire [7:0] dayTimeLightOutput;
-    //  LOCA VARIABLE TRAFFIC LIGHT OUTPUT
-    wire [7:0] trafficLightOutput;
-
-    //  TRAFFIC MODE MODULES
-    Pedestrian PedestrianModule (pedSignal, walkingLightOutput, pedestrianLightOutput);
-    Emergency EmergencyModule (emgLane, emergencyLightOutput);
-    assign nightTimeLightOutput = 8'b00000000;
-    assign dayTimeLightOutput = 8'b00000000;
-    // NightTime NightTimeModule (clk, rst, nightTimeLightOutput);
-
-    //  TRAFFIC MODE STATE MACHINE
-    TrafficMode TM (clk, rst, timeSignal, pedSignal, emgSignal, trafficMode);
-
-    //  DECODE TRAFFIC MODE
-    Decoder TrafficModeDecoder (trafficMode, trafficModeOneHot);
-
-    //  SELECT MODULE OUTPUT TO USE
-    Mux4 #(8) LightOutputMux (emergencyLightOutput, pedestrianLightOutput, nightTimeLightOutput, dayTimeLightOutput, trafficModeOneHot, trafficLightOutput);
-endmodule
 
 module TestTestBench ();
     integer f;  // File 
@@ -56,7 +23,7 @@ module TestTestBench ();
     reg [7:0] emgLane;
 
     //  BREADBOARD
-    TestBreadboard TB(clk, rst, timeSignal, pedSignal, emgSignal, emgLane);
+    Breadboard TB(clk, rst, timeSignal, pedSignal, emgSignal, emgLane, {w1, w2, s1, s2, e1, e2, n1, n2});
 
     //  THREAD WITH CLOCK CONTROL
     initial

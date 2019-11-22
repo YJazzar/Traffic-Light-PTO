@@ -88,17 +88,16 @@ endmodule
  *          out -> The resulting selector line based on the boolean equations
  *          
  */
-module CombinationalLogic (reset, down, load, isZero, out);
+module CombinationalLogic (down, isZero, out);
     parameter BIT_WIDTH = 4;
 
-    input reset, down, load, isZero;
+    input down, isZero;
     output [3:0] out;
 
-    assign out[3] = (~reset & ~down & ~load)        // Is true for a No-op
-                    | (~reset & down & load);   
-    assign out[2] = ~reset & ~down & load;          // Is true when its time to load
-    assign out[1] = (~reset & down & ~load);        // Is true when it needs to count down
-    assign out[0] = reset | isZero;                 // Is true when it needs to reset
+    assign out[3] = 0;          // Is true for a No-op
+    assign out[2] = ~down;      // Is true when its time to load
+    assign out[1] = down;       // Is true when it needs to count down
+    assign out[0] = isZero;     // Is true when it needs to reset
     
 endmodule
 
@@ -123,15 +122,15 @@ endmodule
  *          clOut -> "Combinational Logic Output" that serves as the select bit to the 4-Channel mux
  *          ZERO -> A register that holds the constant number for 0
  */
-module SaturationCounter (clk, reset, down, load, loadIn, currCount, isZero);
-    parameter BIT_WIDTH = 4;
+module SaturationTimer (clk, down, loadIn, currCount, isZero);
+    parameter BIT_WIDTH = 7;
     reg [BIT_WIDTH-1:0] ZERO = 0;
 
     // Basic inputs used in other modules
-    input clk, reset;
+    input clk;
 
     // Commands that go into the Combinational Logic Unit
-    input down, load;
+    input down;
 
     // Input used when loading in numbers 
     //      In is used to load in a current value
@@ -152,13 +151,13 @@ module SaturationCounter (clk, reset, down, load, loadIn, currCount, isZero);
     Counter #(BIT_WIDTH) counter (down, currCount, nextCount);
 
     // Use Combinational logic to get the 1-hot number that goes into the following mux
-    CombinationalLogic #(BIT_WIDTH) cl(reset, down, load, isZero, clOut); 
+    CombinationalLogic #(BIT_WIDTH) cl(down, isZero, clOut); 
 
     // Pass the output of the CL unit into the 4-channel mux
     Mux4 #(BIT_WIDTH) mux4(currCount, loadIn, nextCount, loadIn, clOut, mux4Out);
 
     // Make the register with the input being from the mux
-    DFF #(BIT_WIDTH, 1'bx) countRegister (clk, mux4Out, currCount);
+    DFF #(BIT_WIDTH, 1'b0) countRegister (clk, mux4Out, currCount);
 
     // Calculate the value for "isZero"
     EqualTo #(BIT_WIDTH) equalToZero (currCount, ZERO, isZero);
