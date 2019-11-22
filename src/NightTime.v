@@ -44,7 +44,6 @@ module NightTime(clk, rst, laneOutput);
 	//reset state (starting state) == 11001100
 	Mux2 arrMUX[7:0](8'b11001100, nextLaneOutput, {rst, ~rst}, muxToDFF);
 
-
 	assign nextLaneOutput = ~outDFF;
 	
 	assign laneOutput = {arrDFF[7].out,arrDFF[6].out,arrDFF[5].out,arrDFF[4].out,arrDFF[3].out,arrDFF[2].out,arrDFF[1].out,arrDFF[0].out};//Set the state equal to the value of the flip flops
