@@ -1,12 +1,14 @@
 
 
-module Breadboard (clk, rst, timeSignal, pedSignal, emgSignal, emgLane, lanes);
+module Breadboard (clk, rst, hoursIn, pedSignal, emgSignal, emgLane, lanes);
     //  INPUT
     input clk, rst; // clk is a 1 second clock
-    input timeSignal, pedSignal, emgSignal;
+	input [4:0] hoursIn;
+    input pedSignal, emgSignal;
     input [7:0] emgLane;
     input [7:0][7:0] lanes;
-
+	
+	
     //  LOCAL VARIABLES
     wire isZero;
     wire [1:0] trafficMode;
@@ -22,6 +24,10 @@ module Breadboard (clk, rst, timeSignal, pedSignal, emgSignal, emgLane, lanes);
     // LOCAL VARIABLE FOR MODULE INPUTS
     wire [6:0] loadIn;
     wire [6:0] currCount;
+	
+	// LOCAL VARIABLE FOR hoursIN -> dayNightSignal
+	wire dayNightSignal;
+	TimeOfDayInHoursToBoolean_CL (hoursIn, dayNightSignal);
 
     //  TRAFFIC MODE MODULES
     SaturationTimer TimerModule (clk, down, loadIn, currCount, isZero);
@@ -31,7 +37,7 @@ module Breadboard (clk, rst, timeSignal, pedSignal, emgSignal, emgLane, lanes);
     NightTime  NightTimeModule  (isZero, nightTimeLightOutput);
 
     //  TRAFFIC MODE STATE MACHINE
-    TrafficMode TM (clk, rst, timeSignal, pedSignal, emgSignal, trafficMode);
+    TrafficMode TM (clk, rst, dayNightSignal, pedSignal, emgSignal, trafficMode);
 
     //  DECODE TRAFFIC MODE
     Decoder TrafficModeDecoder (trafficMode, trafficModeOneHot);
