@@ -84,6 +84,8 @@
 
 // endmodule
 
+/*
+
 module CounterTestBench();
 	//clock signal
 	reg clk;
@@ -157,3 +159,4 @@ module CounterTestBench();
 
 endmodule
 
+*/

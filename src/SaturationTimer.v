@@ -1,3 +1,4 @@
+/*
 //=============================================
 // Saturation Counter
 //=============================================
@@ -39,6 +40,7 @@ module SaturationCounter #(parameter COUNT_SIZE = 5) (clk, rst, up, down, load, 
     //  MUX TO FIND NEXT VALUE OF COUNT
     Mux4 #(COUNT_SIZE) mux(out, in, satDpOutPm1, {COUNT_SIZE{1'b0}}, {(~rst & ~up & ~down & ~load), (~rst & load), (~rst & (up | down)), rst}, next);
 endmodule
+*/
 
 //=============================================
 // Saturation Timer
@@ -82,6 +84,7 @@ module SaturationTimer#(parameter COUNT_SIZE = 5) (clk, rst, up, down, load, loa
     Mux4 #(COUNT_SIZE) mux(out, in, satDpOutPm1, {COUNT_SIZE{1'b1}}, {(~rst & ~up & ~down & ~load), (~rst & load), (~rst & (up | down)), rst}, next);
 endmodule
 
+/*
 module CountDownTimer (clk, rst, down, load, loadIn, currentCount);
     parameter COUNT_SIZE = 7;
     input clk, rst, down, load;
@@ -92,3 +95,4 @@ module CountDownTimer (clk, rst, down, load, loadIn, currentCount);
     SaturationCounter #(COUNT_SIZE) counter (clk, rst, 1'b0, down, load, 2'b0, 5'b0, loadIn, currentCount) ;
 
 endmodule
+*/
