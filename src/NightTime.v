@@ -1,7 +1,3 @@
- //this file is ugly
- 
- 
- 
  /*
  *  This Module will calculate the Lights Output if current state is nighttime
  *  @param:
@@ -39,10 +35,10 @@ module NightTime(clk, rst, laneOutput);
 	wire [7:0] nextLaneOutput;//The output from the characteristic equations
 
 
-	DFF  arrDFF[7:0](clk, muxToDFF, outDFF);
+	DFF  #(8, 8'b11001100) arrDFF (clk, muxToDFF, outDFF);
 
 	//reset state (starting state) == 11001100
-	Mux2 arrMUX[7:0](8'b11001100, nextLaneOutput, {rst, ~rst}, muxToDFF);
+	//Mux2 arrMUX[7:0](8'b11001100, nextLaneOutput, {rst, ~rst}, muxToDFF);
 
 	assign nextLaneOutput = ~outDFF;
 	
