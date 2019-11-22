@@ -16,16 +16,10 @@
  *      out = 1000 -> lane = W
  *      
  */
-module GetLargestLane (lane, out);
-    input [7:0][7:0] lane;
+module GetLargestLane (laneSum, out);
+    input [3:0][8:0] laneSum;
     output [1:0] out;
 
-    // Add all adjacent lanes
-    wire [3:0][8:0] laneSum;
-    Adder_8 one   (lane[0], lane[1], laneSum[0]);   // Add North lanes
-    Adder_8 two   (lane[2], lane[3], laneSum[1]);   // Add East lanes
-    Adder_8 three (lane[4], lane[5], laneSum[2]);   // Add South lanes
-    Adder_8 four  (lane[6], lane[7], laneSum[3]);   // Add West lanes
 
     // Wire holding results of comparator 
     wire [2:0] mgResult;
@@ -56,6 +50,17 @@ module GetLargestLane (lane, out);
 endmodule  
 
 
+// Add all adjacent lanes
+module AddLanes (newLane, laneSum);
+    input  [7:0][7:0] newLane;
+    output [3:0][8:0] laneSum;
+
+    Adder_8 one   (newLane[0], newLane[1], laneSum[0]);   // Add North lanes
+    Adder_8 two   (newLane[2], newLane[3], laneSum[1]);   // Add East lanes
+    Adder_8 three (newLane[4], newLane[5], laneSum[2]);   // Add South lanes
+    Adder_8 four  (newLane[6], newLane[7], laneSum[3]);   // Add West lanes
+
+endmodule
 
 
 /*
@@ -103,10 +108,8 @@ module DayTime (clk, isZero, lane, laneOutput, loadTimer);
     wire [7:0][7:0] newLane;
     wire [6:0] offsetTime;
 
-    // To find how much the timer should count down, we do the following operations
-    
   
-    
+    // Force set the last lane that had the green light to zero:    
     // North lanes
     assign newLane[0] = {8{~laneOutput[0]}} & lane[0];
     assign newLane[1] = {8{~laneOutput[1]}} & lane[1];
@@ -120,9 +123,18 @@ module DayTime (clk, isZero, lane, laneOutput, loadTimer);
     assign newLane[6] = {8{~laneOutput[6]}} & lane[6];
     assign newLane[7] = {8{~laneOutput[7]}} & lane[7];
 
-   
+
+    // Add all adjacent lanes
+    wire [3:0][8:0] laneSum;
+    AddLanes adders (newLane, laneSum);
+
+
+    // To find how much the timer should count down, we do the following operations
+    // OffSet offSet ();
+  
+
     // A 2 bit wire (from GetLargestLane Module) that gets the largest lane
-    GetLargestLane largest (newLane, largestLane);
+    GetLargestLane largest (laneSum, largestLane);
 
     // Get the 1-hot for which lane to turn on
     Decoder dec (largestLane, decOut);
