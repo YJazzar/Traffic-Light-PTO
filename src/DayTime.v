@@ -37,10 +37,11 @@ module DayTime (clk, isZero, lane, laneOutput, loadTimer);
     output [7:0] laneOutput;
     output [6:0] loadTimer;
 
-    wire [1:0] largestLane;
+    wire [1:0] largestLaneIndex;
     wire [3:0] decOut;
     wire [3:0] currMax;
     wire [7:0][7:0] newLane;
+	wire [1:0][8:0] largestTwoLanes; //for offset comparison
     wire [6:0] offsetTime;  // TODO; Implement
 
   
@@ -63,16 +64,14 @@ module DayTime (clk, isZero, lane, laneOutput, loadTimer);
     wire [3:0][8:0] laneSum;
     AddLanes adders (newLane, laneSum);
 
-
-    // To find how much the timer should count down, we do the following operations
-    // OffSet offSet (); //TODO: Implement
-  
-
     // A 2 bit wire (from GetLargestLane Module) that gets the largest lane
-    GetLargestLane largest (laneSum, largestLane);
+    GetLargestLane largest (laneSum, largestTwoLanes, largestLaneIndex);
+	
+	// To find how much the timer should count down, we do the following operations
+    OffSet howMuchDiffBetweenLargestAndSecondLargestLane (largestTwoLanes, offsetTime); //TODO: Implement
 
     // Get the 1-hot for which lane to turn on
-    Decoder dec (largestLane, decOut);
+    Decoder dec (largestLaneIndex, decOut);
 	
 	DFF decoderOut[3:0] (clk, decOut, currMax);
 
@@ -101,8 +100,9 @@ endmodule
  *      out = 1000 -> lane = W
  *      
  */
-module GetLargestLane (laneSum, out);
-    input [3:0][8:0] laneSum;
+module GetLargestLane (laneSum, largestTwoLanes, out);
+    input  [3:0][8:0] laneSum;
+	output [1:0][8:0] largestTwoLanes;
     output [1:0] out;
 
 
@@ -119,7 +119,10 @@ module GetLargestLane (laneSum, out);
     Mux2 #(9) mux1 (laneSum[1], laneSum[0], {~mgResult[0], mgResult[0]}, intermediateMax[0]);
     // Get the max lane from mg2
     Mux2 #(9) mux2 (laneSum[3], laneSum[2], {~mgResult[1], mgResult[1]}, intermediateMax[1]);
-
+	
+	//return the actual # of cars in the largest two lanes. used to calculate offest.
+	assign largestTwoLanes = {intermediateMax[0], intermediateMax[1]};
+	
     MagnitudeComparator mg3 (intermediateMax[0], intermediateMax[1], mgResult[2]);
 
     // The three wires to figure out the final max:
@@ -144,4 +147,17 @@ module AddLanes (newLane, laneSum);
     Adder_8 two   (newLane[2], newLane[3], laneSum[1]);   // Add East  lanes
     Adder_8 three (newLane[4], newLane[5], laneSum[2]);   // Add South lanes
     Adder_8 four  (newLane[6], newLane[7], laneSum[3]);   // Add West  lanes
+endmodule
+
+module OffSet (largestTwoLanes, offsetTime);
+	input  [1:0][8:0] largestTwoLanes;
+	output [6:0] offsetTime;
+	
+	
+	wire  [1:0][8:0] twoMostSigBits;
+	LeftArbiter9bit getMostSigBit [1:0] (largestTwoLanes, twoMostSigBits);
+	
+	assign offsetTime = 7'b0010100;
+	
+	
 endmodule
