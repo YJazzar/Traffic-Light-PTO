@@ -1,4 +1,13 @@
 //left arbiter
+module LeftArbiter4bit (in, oneHotOut);
+  input  [3:0] in;
+  output [3:0] oneHotOut;
+
+  assign oneHotOut = {in[3], ~in[3]&in[2], ~in[3]&~in[2]&in[1], ~in[3]&~in[2]&~in[1]&in[0]};
+endmodule  
+
+
+//left arbiter
 module LeftArbiter9bit (in, oneHotOut);
   input  [8:0] in;
   output [8:0] oneHotOut;
@@ -17,7 +26,7 @@ endmodule
 
 /*
 module testbench();
-  reg  [8:0] i;
+  reg  [4:0] i;
   reg Emergency;
   reg Pedestrian; 
   reg DayNight;
