@@ -14,3 +14,4 @@ module Mux4 #(parameter BUS_WIDTH = 1) (a3, a2, a1, a0, selector, out);
                  ({BUS_WIDTH{selector[1]}} & a1) |
                  ({BUS_WIDTH{selector[0]}} & a0) ;
 endmodule
+

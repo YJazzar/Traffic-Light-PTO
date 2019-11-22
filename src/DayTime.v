@@ -87,6 +87,7 @@ endmodule
  *  @param:
  *      Inputs:
  *          clk -> Clock signal
+ *          timerDone -> a true/false value for when timer has reached 0 or not
  *          lane -> 8 bits for each lane, where:
  *                  lane[0] = N1
  *                  lane[1] = N2
@@ -113,12 +114,17 @@ endmodule
 module DayTime (clk, lane, laneOutput);
     input [7:0][7:0] lane;
     input clk;
+    // wire timerDone;
+
     output [7:0] laneOutput;
 
     wire [1:0] largestLane;
     wire [3:0] decOut;
     wire [3:0] currMax;
     wire [7:0][7:0] newLane;
+    
+
+    // To find how much the timer should count down, we do the following operations
 
   
     
@@ -142,13 +148,9 @@ module DayTime (clk, lane, laneOutput);
     // Get the 1-hot for which lane to turn on
     Decoder dec (largestLane, decOut);
 	
-	
-	InitializedDFF decoderOut[3:0] (clk, 1'b1, decOut, currMax);
+	DFF decoderOut[3:0] (clk, decOut, currMax);
 
-
-    wire [7:0] temp;
-    DecoderToLights decToLights (currMax, temp);
-	assign laneOutput = temp;
+    DecoderToLights decToLights (currMax, laneOutput);
 
 endmodule
 
