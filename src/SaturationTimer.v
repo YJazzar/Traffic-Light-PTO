@@ -88,16 +88,16 @@ endmodule
  *          out -> The resulting selector line based on the boolean equations
  *          
  */
-module CombinationalLogic (down, isZero, out);
+module CombinationalLogic (down, emgLoad, isZero, out);
     parameter BIT_WIDTH = 4;
 
-    input down, isZero;
+    input down, emgLoad, isZero;
     output [3:0] out;
 
-    assign out[3] = 0;          // Is true for a No-op
-    assign out[2] = ~down;      // Is true when its time to load
-    assign out[1] = down;       // Is true when it needs to count down
-    assign out[0] = isZero;     // Is true when it needs to reset
+    assign out[3] = 0;                  // Is true for a No-op
+    assign out[2] = ~down | emgLoad;    // Is true when its time to load
+    assign out[1] = down;               // Is true when it needs to count down
+    assign out[0] = isZero;             // Is true when it needs to reset
     
 endmodule
 
@@ -122,7 +122,7 @@ endmodule
  *          clOut -> "Combinational Logic Output" that serves as the select bit to the 4-Channel mux
  *          ZERO -> A register that holds the constant number for 0
  */
-module SaturationTimer (clk, down, loadIn, currCount, isZero);
+module SaturationTimer (clk, down, emgLoad, loadIn, currCount, isZero);
     parameter BIT_WIDTH = 7;
     reg [BIT_WIDTH-1:0] ZERO = 0;
 
@@ -130,7 +130,7 @@ module SaturationTimer (clk, down, loadIn, currCount, isZero);
     input clk;
 
     // Commands that go into the Combinational Logic Unit
-    input down;
+    input down, emgLoad;
 
     // Input used when loading in numbers 
     //      In is used to load in a current value
@@ -151,7 +151,7 @@ module SaturationTimer (clk, down, loadIn, currCount, isZero);
     Counter #(BIT_WIDTH) counter (down, currCount, nextCount);
 
     // Use Combinational logic to get the 1-hot number that goes into the following mux
-    CombinationalLogic #(BIT_WIDTH) cl(down, isZero, clOut); 
+    CombinationalLogic #(BIT_WIDTH) cl(down, emgLoad, isZero, clOut); 
 
     // Pass the output of the CL unit into the 4-channel mux
     Mux4 #(BIT_WIDTH) mux4(currCount, loadIn, nextCount, loadIn, clOut, mux4Out);

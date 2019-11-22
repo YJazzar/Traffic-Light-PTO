@@ -11,5 +11,5 @@ module Pedestrian(pedSignal, walkingLightOutput, laneOutput, loadTime);
 
     Mux2 #(8) PedestrianLightMux ({8'b11111111}, {8'b00000000}, {pedSignal, ~pedSignal}, walkingLightOutput);
 
-    assign loadTime = 12;
+    assign loadTime = 25;
 endmodule

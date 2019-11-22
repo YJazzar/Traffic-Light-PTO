@@ -23,12 +23,15 @@ module Breadboard (clk, rst, timeSignal, pedSignal, emgSignal, emgLane, lanes);
     wire [6:0] loadIn;
     wire [6:0] currCount;
 
+    // LOCAL VARIABLES TO STORE HOW MUCH TIME TIMER NEEDS TO RESET TO
+    wire [6:0] dayLoadTime, nightLoadTime, emgLoadTime, pedLoadTime;
+
     //  TRAFFIC MODE MODULES
     SaturationTimer TimerModule (clk, down, loadIn, currCount, isZero);
-    Pedestrian PedestrianModule (pedSignal, walkingLightOutput, pedestrianLightOutput);
-    Emergency  EmergencyModule  (emgLane, emergencyLightOutput);
-    DayTime    DayTimeModule    (isZero, lanes, dayTimeLightOutput, loadTimer);
-    NightTime  NightTimeModule  (isZero, nightTimeLightOutput);
+    Pedestrian PedestrianModule (pedSignal, walkingLightOutput, pedestrianLightOutput, pedLoadTime);
+    Emergency  EmergencyModule  (emgLane, emergencyLightOutput, emgLoadTime);
+    DayTime    DayTimeModule    (isZero, lanes, dayTimeLightOutput, dayLoadTime);
+    NightTime  NightTimeModule  (isZero, nightTimeLightOutput, nightLoadTime);
 
     //  TRAFFIC MODE STATE MACHINE
     TrafficMode TM (clk, rst, timeSignal, pedSignal, emgSignal, trafficMode);
