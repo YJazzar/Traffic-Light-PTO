@@ -116,9 +116,8 @@ module DayTime (clk, lane, laneOutput);
     output [7:0] laneOutput;
 
     wire [1:0] largestLane;
-    wire [1:0] secondLargestLane;
     wire [3:0] decOut;
-    wire [1:0] currMax;
+    wire [3:0] currMax;
     wire [7:0][7:0] newLane;
 
   
@@ -138,32 +137,18 @@ module DayTime (clk, lane, laneOutput);
 
    
     // A 2 bit wire (from GetLargestLane Module) that gets the largest lane
-    GetLargestLane largest (lane, largestLane);
-    // A 2 bit wire (from GetLargestLane Module) that gets the second-largest lane
-    GetLargestLane secondLargest (newLane, secondLargestLane);
-
-
-    // If largestLane == currMax -> currMax = secondLargest; else -> currMax = largestLane
-    wire equalResult;
-    wire change;
-    EqualTo #(2) equal (largestLane, currMax, equalResult);
-    SpecialDFF #(1) ch (clk, equalResult, change);
-
-    // Find out the value of nextMax
-    wire [1:0] nextMax;
-    Mux2 #(2) mux (secondLargestLane, largestLane, {change, ~change}, nextMax);
-    // assign nextMax = largestLane;
-    // Feed the output of GetLargestLane module into the D-Flip-Flop
-
-    SpecialDFF dffHighBit (clk, nextMax[1], currMax[1]);
-    SpecialDFF dffLowBit (clk, nextMax[0], currMax[0]);
+    GetLargestLane largest (newLane, largestLane);
 
     // Get the 1-hot for which lane to turn on
-    Decoder dec (currMax, decOut);
+    Decoder dec (largestLane, decOut);
+	
+	
+	InitializedDFF decoderOut[3:0] (clk, 1'b1, decOut, currMax);
+
 
     wire [7:0] temp;
-    DecoderToLights decToLights (decOut, temp);
-    assign laneOutput = temp;
+    DecoderToLights decToLights (currMax, temp);
+	assign laneOutput = temp;
 
 endmodule
 
