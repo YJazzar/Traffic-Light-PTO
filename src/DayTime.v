@@ -30,9 +30,9 @@
  *          offsetTime -> an offset to the default 20sec to be added based on how full each lane is
  *          
  */
-module DayTime (clk, isZero, lane, laneOutput, loadTimer);
+module DayTime (clk, lane, laneOutput, loadTimer);
     input [7:0][7:0] lane;
-    input clk, isZero;
+    input clk;
 
     output [7:0] laneOutput;
     output [6:0] loadTimer;
