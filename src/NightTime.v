@@ -23,7 +23,7 @@ module NightTime(clk, laneOutput, loadTime);
 	//Parameters
 	//---------------------------------------------
 	input clk;
-	output laneOutput;
+	output [7:0] laneOutput;
 	output [6:0] loadTime;
 	
 	//---------------------------------------------

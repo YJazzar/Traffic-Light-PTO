@@ -37,5 +37,5 @@ module TrafficMode (clk, rst, dayNightSignal, pedSignal, emgSignal, currentState
 
     Mux2 #(2) inputMux(resetState, nextState, {rst, ~rst}, nextTrafficMode);
 
-    DFF #(2) trafficMode(clk, nextTrafficMode, currentState);
+    DFF #(2, 2'b00) trafficMode(clk, nextTrafficMode, currentState);
 endmodule

@@ -18,12 +18,14 @@ module TestTestBench ();
     reg [7:0] s2;
     reg [7:0] w1;
     reg [7:0] w2;
+    reg [4:0] hoursIn; 
 
     //  WHICH LANE THE EMERGENCY IS IN
     reg [7:0] emgLane;
+    wire [7:0] TrafficLightOutput;
 
     //  BREADBOARD
-    Breadboard TB(clk, rst, timeSignal, pedSignal, emgSignal, emgLane, {w1, w2, s1, s2, e1, e2, n1, n2});
+    Breadboard TB(clk, rst, hoursIn, pedSignal, emgSignal, emgLane, {w1, w2, s1, s2, e1, e2, n1, n2}, TrafficLightOutput);
 
     //  THREAD WITH CLOCK CONTROL
     initial
@@ -40,14 +42,14 @@ module TestTestBench ();
     //  THREAD THAT DISPLAYS OUTPUTS
     initial
     begin
-        f = $fopen("Final-Output.txt", "w");
+        f = $fopen("Final-Output2.txt", "w");
         #2
         forever
             begin
                 #5
-                $fwrite(f, "---+---+---+-----+---+---+----+--------+----+---+---+---+---+---+----+---+---+---\n");
-                $fwrite(f, "---+---+---+-----+---+---+----+--------+----+---+---+---+---+---+----+---+---+---\n");
-                $fwrite(f, "                                                              \n");
+                $fwrite(f, "---+---+---+-----+---+---+----+--------+----+---+---+---+---+---+----+---       |CLK|RST|DAY|NIGHT|PED|EMG|MODE|EMG_LANE|Traffic Light Output\n");
+                $fwrite(f, "---+---+---+-----+---+---+----+--------+----+---+---+---+---+---+----+---       +---+---+---+-----+---+---+----+--------+-----------------\n");
+                $fwrite(f, "                                                                                  %1b  |%1b |%1b  |%1b   |%1b  |%1b  |%2b |%8b| %8b\n", clk, rst, timeSignal, ~timeSignal, pedSignal, emgSignal, TB.trafficMode, emgLane, TrafficLightOutput);
                 $fwrite(f, "                            N                                 \n");
                 $fwrite(f, "            S1: %8b                                           \n", s1);
                 $fwrite(f, "            S2: %8b                                           \n", s2);
@@ -76,10 +78,10 @@ module TestTestBench ();
                 $fwrite(f, "                                 N2: %8b                      \n", n2);
                 $fwrite(f, "                            S                                 \n");
                 $fwrite(f, "                                                              \n");
-                $fwrite(f, "---+---+---+-----+---+---+----+--------+----+---+---+---+---+---+----+---+---+---\n");
-                $fwrite(f, "CLK|RST|DAY|NIGHT|PED|EMG|MODE|EMG_LANE\n");
-                $fwrite(f, "---+---+---+-----+---+---+----+--------\n");
-                $fwrite(f, "%1b  |%1b  |%1b   |%1b   |%1b  |%1b  |%2b  |%8b\n", clk, rst, ~rst, timeSignal, pedSignal, emgSignal, TB.trafficMode, emgLane);
+                $fwrite(f, "---+---+---+-----+---+---+----+--------+----+---+---+---+---+---+----+---+---+---+---+---+----+---+---+---+---+---+----+\n");
+                // $fwrite(f, "CLK|RST|DAY|NIGHT|PED|EMG|MODE|EMG_LANE\n");
+                // $fwrite(f, "---+---+---+-----+---+---+----+--------\n");
+                // $fwrite(f, "%1b  |%1b  |%1b   |%1b   |%1b  |%1b  |%2b  |%8b\n", clk, rst, ~rst, timeSignal, pedSignal, emgSignal, TB.trafficMode, emgLane);
                 
             end
     end
@@ -88,26 +90,36 @@ module TestTestBench ();
     initial
     begin
         #2
-        #5 rst = 1; timeSignal = 0; pedSignal = 0; emgSignal = 0;
         #5 $fwrite(f, "+--------------+\n");
            $fwrite(f, "| RESET SIGNAL |\n");
            $fwrite(f, "+--------------+\n");
+        #5 rst = 1; timeSignal = 0; pedSignal = 0; emgSignal = 0;
+
+        #5 $fwrite(f, "+------------------+\n");
+           $fwrite(f, "| EMERGENCY SIGNAL |\n");
+           $fwrite(f, "+------------------+\n");
         #5 rst = 0; timeSignal = 0; pedSignal = 0; emgSignal = 1;
            w1 = 8'b00000000; w2 = 8'b00000000; s1 = 8'b00000000; s2 = 8'b00000000;
            e1 = 8'b00000000; e2 = 8'b00000000; n1 = 8'b10000000; n2 = 8'b00000000;
            emgLane = 8'b00001000;
-        #5 $fwrite(f, "+------------------+\n");
-           $fwrite(f, "| EMERGENCY SIGNAL |\n");
-           $fwrite(f, "+------------------+\n");
+
+        #5 $fwrite(f, "+-------------------+\n");
+           $fwrite(f, "| PEDESTRIAN SIGNAL |\n");
+           $fwrite(f, "+-------------------+\n");
         #5 rst = 0; timeSignal = 0; pedSignal = 1; emgSignal = 0;
            w1 = 8'b00000000; w2 = 8'b00000000; s1 = 8'b00000000; s2 = 8'b00000000;
            e1 = 8'b00000000; e2 = 8'b00000000; n1 = 8'b10000000; n2 = 8'b00000000;
            emgLane = 8'b00001000;
+
         #5 $fwrite(f, "+-------------------+\n");
-           $fwrite(f, "| PEDESTRIAN SIGNAL |\n");
+           $fwrite(f, "|     DAY SIGNAL    |\n");
            $fwrite(f, "+-------------------+\n");
-           
-            $fclose(f);
+        #5 rst = 0; timeSignal = 1; pedSignal = 0; emgSignal = 0;
+           w1 = 8'b00001000; w2 = 8'b00010100; s1 = 8'b00000100; s2 = 8'b00000010;
+           e1 = 8'b00100000; e2 = 8'b00000010; n1 = 8'b10000100; n2 = 8'b00000000;
+           emgLane = 8'b00000000;
+        #5
+        $fclose(f);
         $finish;
     end
 endmodule

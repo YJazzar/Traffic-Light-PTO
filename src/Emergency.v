@@ -15,6 +15,6 @@ module Emergency(emergencyLane, laneOutput, loadCommand, loadTime);
     assign loadCommand =  emergencyLane[0] &  emergencyLane[1]
                         & emergencyLane[2] &  emergencyLane[3]
                         & emergencyLane[4] &  emergencyLane[5]
-                        & emergencyLane[6] &  emergencyLane[7]
+                        & emergencyLane[6] &  emergencyLane[7];
 
 endmodule
