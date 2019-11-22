@@ -3,7 +3,7 @@
 module CounterTestBench();
 	//clock signal
 	reg clk;
-    parameter BIT_WIDTH = 5;
+    parameter BIT_WIDTH = 6;
     reg reset, down, load;
     reg [BIT_WIDTH-1:0] loadIn;
     

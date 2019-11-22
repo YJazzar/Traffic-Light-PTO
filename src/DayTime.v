@@ -55,32 +55,8 @@ module GetLargestLane (lane, out);
 
 endmodule  
 
-/*  @return a true/false value if A > B
- * 
- *  Where:
- *      A = 9 bits wide
- *      B = 9 bits wide
- */
-module MagnitudeComparator (A, B, Result);
-    input [8:0] A, B;
-    output Result;
-
-    assign Result = A > B;
-endmodule
 
 
-
-
-module EqualTo (A, B, result);
-    parameter n = 8;
-    input [n-1:0] A, B;
-    output result;
-
-    assign result = (A == B);
-
-endmodule
-
-//----------------------------------------------------------------------
 
 /*
  *  This Module will figure out the repective enable lines for: Day-time, Night-time, Pedestrian, and Emergency
@@ -88,6 +64,7 @@ endmodule
  *      Inputs:
  *          clk -> Clock signal
  *          timerDone -> a true/false value for when timer has reached 0 or not
+ *          isZero -> An true/false input from the timer that is true when the countdown value in timer reaches 0 
  *          lane -> 8 bits for each lane, where:
  *                  lane[0] = N1
  *                  lane[1] = N2
@@ -104,28 +81,30 @@ endmodule
  *                  out = 00001100 -> lane = E
  *                  out = 00110000 -> lane = S
  *                  out = 11000000 -> lane = W
+ *          loadTimer -> A wire that holds the value the timer should reset to the next time it reaches 0
  * 
  *      local variables:
  *          currMax -> The current "state" of the traffic signals (this will feed into the decoder)
  *          nextMax -> What the next "state"" of the traffic light signals will be
  *          largestLane -> an itnermediate value between currMax and nextMax to ensure no duplicates happen
  *          decOut -> Changing the "state" of the traffic light signals to an actual output that can be sent to them (by using a decoder)
+ *          offsetTime -> an offset to the default 20sec to be added based on how full each lane is
  */
-module DayTime (clk, lane, laneOutput);
+module DayTime (clk, isZero, lane, laneOutput, loadTimer);
     input [7:0][7:0] lane;
-    input clk;
-    // wire timerDone;
+    input clk, isZero;
 
     output [7:0] laneOutput;
+    output [6:0] loadTimer;
 
     wire [1:0] largestLane;
     wire [3:0] decOut;
     wire [3:0] currMax;
     wire [7:0][7:0] newLane;
-    
+    wire [6:0] offsetTime;
 
     // To find how much the timer should count down, we do the following operations
-
+    
   
     
     // North lanes

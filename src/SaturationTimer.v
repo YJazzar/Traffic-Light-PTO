@@ -60,7 +60,7 @@
  *          stop -> A temporary wire that will check if the counter has reached 0. If so, it stops subtracting 1 from "prevCount"
  */
 module Counter (down, prevCount, nextCount);
-    parameter BIT_WIDTH = 4;
+    parameter BIT_WIDTH = 6;
     
     input down;
     input   [BIT_WIDTH-1:0] prevCount;
