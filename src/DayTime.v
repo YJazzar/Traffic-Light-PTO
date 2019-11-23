@@ -36,7 +36,7 @@ module DayTime (clk, lane, laneOutput, loadTimer);
 
     output [7:0] laneOutput;
     output [6:0] loadTimer;
-	assign loadTimer = 25; //load 25 seconds into timer
+	assign loadTimer = 2; //load 25 seconds into timer
 
     wire [1:0] largestLaneIndex;
     wire [3:0] decOut;

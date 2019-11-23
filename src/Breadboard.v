@@ -41,7 +41,7 @@ module Breadboard (clk, rst, hoursIn, pedSignal, emgSignal, emgLane, lanes);
 	// TRAFFIC MODE MODULES
     Pedestrian PedestrianModule (pedSignal, walkingLightOutput, pedestrianLightOutput, pedLoadTime);
     Emergency  EmergencyModule  (emgLane, emergencyLightOutput, emgLoad, emgLoadTime);
-    DayTime    DayTimeModule    (clk, lanes, dayTimeLightOutput, dayLoadTime);
+    DayTime    DayTimeModule    (isZero, lanes, dayTimeLightOutput, dayLoadTime);
     NightTime  NightTimeModule  (clk, nightTimeLightOutput, nightLoadTime);
 
     //  TRAFFIC MODE STATE MACHINE

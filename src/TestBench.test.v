@@ -24,7 +24,9 @@ module TestTestBench ();
 	//wire TB.dayTimeLightOutput;
 
     //  BREADBOARD (clk, rst, hoursIn, pedSignal, emgSignal, emgLane, lanes, TB.dayTimeLightOutput);
-    Breadboard TB(clk, rst, hoursIn, pedSignal, emgSignal, emgLane, {n1, n2, e1, e2, s1, s2, w1, w2});
+    // Breadboard TB(clk, rst, hoursIn, pedSignal, emgSignal, emgLane, {n1, n2, e1, e2, s1, s2, w1, w2});
+    
+    Breadboard TB(clk, rst, hoursIn, pedSignal, emgSignal, emgLane, {w1, w2, s1, s1, e1, e2, n1, n2});
 
     //  THREAD WITH CLOCK CONTROL
     initial
@@ -84,7 +86,7 @@ module TestTestBench ();
 																								TB.dayLoadTime, TB.nightLoadTime, TB.emgLoadTime, TB.pedLoadTime, TB.loadIn, 1'b1, TB.emgLoad, TB.loadIn, TB.isZero);
                 
             end
-    end
+    end  
     //  THREAD WITH INPUT STIMULUS
     initial
     begin
@@ -100,7 +102,7 @@ module TestTestBench ();
            emgLane = 8'b00001000;
 		#60
            
-        $fclose(f);
+        // $fclose(f);
         $finish;
     end
 endmodule
