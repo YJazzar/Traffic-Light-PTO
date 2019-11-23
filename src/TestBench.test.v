@@ -85,7 +85,6 @@ module TestTestBench ();
                 $fwrite(f, "                                 N2: %8b                      \n", n2);
                 $fwrite(f, "                            S                                 \n");
                 $fwrite(f, "                                                              \n");
-                $fwrite(f, "---+---+-------+--------------+---+---+----+--------|---------\n");
                 $fwrite(f, "CLK|RST|HOURSIN|dayNightSignal|PED|EMG|MODE|EMG_LANE|Countdown|DayLoad|NgtLoad|EmgLoad|PedLoad|ACTUAL_LOAD| down |Eload|loadIn | isZero |\n");
                 $fwrite(f, "---+---+-------+--------------+---+---+----+--------|---------\n");
                 $fwrite(f, "%1b  |%1b  |%5b  |%1b             |%1b  |%1b  |%2b  |%8b|%7b  |%7b|%7b|%7b|%7b|%7b    |  %b   |  %b  |  %4d |    %b   |\n", clk, rst, hoursIn, TB.dayNightSignal, pedSignal, emgSignal, TB.trafficMode, emgLane, TB.currentCount,
