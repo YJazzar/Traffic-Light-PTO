@@ -15,7 +15,7 @@
  *                  lane[7] = W2  
  *
  *      Outputs:
- *          laneOutput -> an 8-bit value for each traffic light, where:
+ *          dayTimeLightOutput -> an 8-bit value for each traffic light, where:
  *                  out = 00000011 -> lane = N
  *                  out = 00001100 -> lane = E
  *                  out = 00110000 -> lane = S
@@ -30,11 +30,11 @@
  *          offsetTime -> an offset to the default 20sec to be added based on how full each lane is
  *          
  */
-module DayTime (clk, lane, laneOutput, loadTimer);
+module DayTime (clk, lane, dayTimeLightOutput, loadTimer);
     input [7:0][7:0] lane;
     input clk;
 
-    output [7:0] laneOutput;
+    output [7:0] dayTimeLightOutput;
     output [6:0] loadTimer;
 	assign loadTimer = 2; //load 25 seconds into timer
 
@@ -48,17 +48,17 @@ module DayTime (clk, lane, laneOutput, loadTimer);
   
     // Force set the last lane that had the green light to zero:    
     // North lanes
-    assign newLane[0] = {8{~laneOutput[0]}} & lane[0];
-    assign newLane[1] = {8{~laneOutput[1]}} & lane[1];
+    assign newLane[0] = {8{~dayTimeLightOutput[0]}} & lane[0];
+    assign newLane[1] = {8{~dayTimeLightOutput[1]}} & lane[1];
     // East lanes  
-    assign newLane[2] = {8{~laneOutput[2]}} & lane[2];
-    assign newLane[3] = {8{~laneOutput[3]}} & lane[3];
+    assign newLane[2] = {8{~dayTimeLightOutput[2]}} & lane[2];
+    assign newLane[3] = {8{~dayTimeLightOutput[3]}} & lane[3];
     // South lanes  
-    assign newLane[4] = {8{~laneOutput[4]}} & lane[4];
-    assign newLane[5] = {8{~laneOutput[5]}} & lane[5];
+    assign newLane[4] = {8{~dayTimeLightOutput[4]}} & lane[4];
+    assign newLane[5] = {8{~dayTimeLightOutput[5]}} & lane[5];
     // West lanes  
-    assign newLane[6] = {8{~laneOutput[6]}} & lane[6];
-    assign newLane[7] = {8{~laneOutput[7]}} & lane[7];
+    assign newLane[6] = {8{~dayTimeLightOutput[6]}} & lane[6];
+    assign newLane[7] = {8{~dayTimeLightOutput[7]}} & lane[7];
 
 
     // Add all adjacent lanes
@@ -76,7 +76,7 @@ module DayTime (clk, lane, laneOutput, loadTimer);
 	
 	DFF decoderOut[3:0] (clk, decOut, currMax);
 
-    DecoderToLights decToLights (currMax, laneOutput);
+    DecoderToLights decToLights (currMax, dayTimeLightOutput);
 
 endmodule
 
