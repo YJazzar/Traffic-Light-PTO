@@ -66,7 +66,7 @@ module DayTime (clk, lane, laneOutput, loadTimer);
     AddLanes adders (newLane, laneSum);
 
     // A 2 bit wire (from GetLargestLane Module) that gets the largest lane
-    GetLargestLane largest (laneSum, largestTwoLanes, largestLaneIndex);
+    GetLargestLane largest (laneSum, largestLaneIndex);
 	
 	// To find how much the timer should count down, we do the following operations
     // OffSet howMuchDiffBetweenLargestAndSecondLargestLane (largestTwoLanes, offsetTime); //TODO: Implement
