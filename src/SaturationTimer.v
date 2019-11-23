@@ -69,7 +69,7 @@ module Counter (down, prevCount, nextCount);
     wire stop;    
     assign stop = (prevCount == 0);                                         // stop is true when the count has reached 0
 
-    assign nextCount = ({BIT_WIDTH{down & ~stop}} & (prevCount - 1'b1))     // Subtract 1 if down == 1
+    assign nextCount =({BIT_WIDTH{down & ~stop}} & (prevCount - 1'b1))     // Subtract 1 if down == 1
                     | ({BIT_WIDTH{~down & ~stop}} & (prevCount))            // No-op if down != 1
                     | ({BIT_WIDTH{stop}} & prevCount);                      // No-op if stop == 1
 
