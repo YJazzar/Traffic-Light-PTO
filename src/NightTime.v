@@ -17,13 +17,13 @@
  *          local variables
  */
  
-module NightTime(clk, laneOutput, loadTime);
+module NightTime(clk, nightTimeLightOutput, loadTime);
 
 	//---------------------------------------------
 	//Parameters
 	//---------------------------------------------
 	input clk;
-	output [7:0] laneOutput;
+	output [7:0] nightTimeLightOutput;
 	output [6:0] loadTime;
 	
 	//---------------------------------------------
@@ -41,7 +41,7 @@ module NightTime(clk, laneOutput, loadTime);
 	
 	// assign laneOutput = 8'b11001100; //{arrDFF[7].out,arrDFF[6].out,arrDFF[5].out,arrDFF[4].out,arrDFF[3].out,arrDFF[2].out,arrDFF[1].out,arrDFF[0].out};//Set the state equal to the value of the flip flops
 	// assign laneOutput = {outDFF[7], outDFF[6], outDFF[5], outDFF[4] , outDFF[3], outDFF[2], outDFF[1, outDFF[0]};//Set the state equal to the value of the flip flops
-	assign laneOutput = outDFF;
+	assign nightTimeLightOutput = outDFF;
 	assign loadTime = 1;
 
 endmodule
