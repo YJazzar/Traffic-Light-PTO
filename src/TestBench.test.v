@@ -85,10 +85,10 @@ module TestTestBench ();
                 $fwrite(f, "                                 N2: %8b                      \n", n2);
                 $fwrite(f, "                            S                                 \n");
                 $fwrite(f, "                                                              \n");
-                $fwrite(f, "CLK|RST|HOURSIN|dayNightSignal|PED|EMG|MODE|EMG_LANE|Countdown|DayLoad|NgtLoad|EmgLoad|PedLoad|ACTUAL_LOAD| down |Eload|loadIn | isZero |\n");
-                $fwrite(f, "---+---+-------+--------------+---+---+----+--------|---------\n");
-                $fwrite(f, "%1b  |%1b  |%5b  |%1b             |%1b  |%1b  |%2b  |%8b|%7b  |%7b|%7b|%7b|%7b|%7b    |  %b   |  %b  |  %4d |    %b   |\n", clk, rst, hoursIn, TB.dayNightSignal, pedSignal, emgSignal, TB.trafficMode, emgLane, TB.currentCount,
-																								TB.dayLoadTime, TB.nightLoadTime, TB.emgLoadTime, TB.pedLoadTime, TB.loadIn, 1'b1, emgSignal, TB.loadIn, TB.isZero);
+                $fwrite(f, "CLK|RST|HOURSIN|dayNightSignal|PED|EMG|MODE|EMG_LANE|Countdown|            DayLoad|NgtLoad|EmgLoad|PedLoad|ACTUAL_LOAD|\n");
+                $fwrite(f, "---+---+-------+--------------+---+---+----+WWSSEENN|---------\n");
+                $fwrite(f, "%1b  |%1b  |%5b  |%1b             |%1b  |%1b  |%2b  |%8b|%7b  |            %7b|%7b|%7b|%7b|%7b    |\n", clk, rst, hoursIn, TB.dayNightSignal, pedSignal, emgSignal, TB.trafficMode, emgLane, TB.currentCount,
+																								TB.dayLoadTime, TB.nightLoadTime, TB.emgLoadTime, TB.pedLoadTime, TB.loadIn);
                 
             end
     end  
@@ -101,18 +101,16 @@ module TestTestBench ();
 		hoursIn = 5'b01100; pedSignal = 0; emgSignal = 0; emgLane = 8'b00000000;
 		
 		#5 rst = 1; 
-		
         #5 rst = 0;
 			
-        #60 emgSignal = 1; emgLane = 8'b00001000;
-		
-		    w1 = 8'b00000000; w2 = 8'b00000000; s1 = 8'b00000011; s2 = 8'b00000011;
-            e1 = 8'b00110000; e2 = 8'b00011100; n1 = 8'b00000000; n2 = 8'b00000000;
-		
+        #60 emgSignal = 1; emgLane = 8'b00001000; e2 = 8'b00000001;
 		#40 emgSignal = 0; emgLane = 8'b00000000;
+		#20
+		w1 = 8'b00000000; w2 = 8'b00000000; s1 = 8'b00000011; s2 = 8'b00000011;
+        e1 = 8'b00110000; e2 = 8'b00011100; n1 = 8'b00000000; n2 = 8'b00000000;
 		
-		#50 hoursIn = 22;
-		#60 pedSignal = 1;
+		#60 hoursIn = 22;
+		#55 pedSignal = 1;
 		#50
            
         // $fclose(f);
