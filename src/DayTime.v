@@ -86,14 +86,15 @@ endmodule
 /*  @return the 1-Hot number corrosponding to the lane with the 
  *  largest number of cars present.
  *  Where:
- *      lane[0] = N1
- *      lane[1] = N2
- *      lane[2] = E1
- *      lane[3] = E2
- *      lane[4] = S1
- *      lane[5] = S2
- *      lane[6] = W1
- *      lane[7] = W2
+ *		lane[7] = W1
+ *      lane[6] = W2
+ *      lane[5] = E1
+ *      lane[4] = E2
+ *      lane[3] = S1
+ *      lane[2] = S2
+ *      lane[1] = N1
+ *      lane[0] = N2
+ *      
  * 
  *      out = 0001 -> lane = N
  *      out = 0010 -> lane = E
