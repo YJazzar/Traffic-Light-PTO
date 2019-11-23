@@ -43,7 +43,7 @@ module DayTime (clk, lane, laneOutput, loadTimer);
     wire [3:0] currMax;
     wire [7:0][7:0] newLane;
 	wire [1:0][8:0] largestTwoLanes; //for offset comparison
-    wire [6:0] offsetTime;  // TODO; Implement
+    
 
   
     // Force set the last lane that had the green light to zero:    
@@ -69,7 +69,7 @@ module DayTime (clk, lane, laneOutput, loadTimer);
     GetLargestLane largest (laneSum, largestTwoLanes, largestLaneIndex);
 	
 	// To find how much the timer should count down, we do the following operations
-    OffSet howMuchDiffBetweenLargestAndSecondLargestLane (largestTwoLanes, offsetTime); //TODO: Implement
+    // OffSet howMuchDiffBetweenLargestAndSecondLargestLane (largestTwoLanes, offsetTime); //TODO: Implement
 
     // Get the 1-hot for which lane to turn on
     Decoder dec (largestLaneIndex, decOut);

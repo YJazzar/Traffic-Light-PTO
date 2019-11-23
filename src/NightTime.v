@@ -29,16 +29,20 @@ module NightTime(clk, laneOutput, loadTime);
 	//---------------------------------------------
 	//Local Variables
 	//---------------------------------------------
-	wire [7:0] muxToDFF;
+	wire [7:0] nextLights;
 	wire [7:0] outDFF;//The outDFF from the D Flip-Flops
 	wire [7:0] nextLaneOutput;//The output from the characteristic equations
 
-	DFF  #(8, 8'b11001100) arrDFF (clk, muxToDFF, outDFF);
+	assign nextLights = ~outDFF;
+
+	DFF  #(8, 8'b11001100) arrDFF (clk, nextLights, outDFF);
 
 	assign nextLaneOutput = ~outDFF;
 	
-	assign laneOutput = 8'b11001100; //{arrDFF[7].out,arrDFF[6].out,arrDFF[5].out,arrDFF[4].out,arrDFF[3].out,arrDFF[2].out,arrDFF[1].out,arrDFF[0].out};//Set the state equal to the value of the flip flops
-	assign loadTime = 20;
+	// assign laneOutput = 8'b11001100; //{arrDFF[7].out,arrDFF[6].out,arrDFF[5].out,arrDFF[4].out,arrDFF[3].out,arrDFF[2].out,arrDFF[1].out,arrDFF[0].out};//Set the state equal to the value of the flip flops
+	// assign laneOutput = {outDFF[7], outDFF[6], outDFF[5], outDFF[4] , outDFF[3], outDFF[2], outDFF[1, outDFF[0]};//Set the state equal to the value of the flip flops
+	assign laneOutput = outDFF;
+	assign loadTime = 1;
 
 endmodule
 

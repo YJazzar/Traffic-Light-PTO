@@ -1,6 +1,6 @@
 
 
-module Breadboard (clk, rst, hoursIn, pedSignal, emgSignal, emgLane, lanes);
+module Breadboard (clk, rst, hoursIn, pedSignal, emgSignal, emgLane, lanes, trafficLightOutput);
     //  INPUT
     input clk, rst; // clk is a 1 second clock
 	input [4:0] hoursIn;
@@ -18,8 +18,9 @@ module Breadboard (clk, rst, hoursIn, pedSignal, emgSignal, emgLane, lanes);
     wire [7:0] pedestrianLightOutput;
     wire [7:0] nightTimeLightOutput;
     wire [7:0] dayTimeLightOutput;
+
     //  LOCAL VARIABLE TRAFFIC LIGHT OUTPUT
-    //  output [7:0] trafficLightOutput;
+    output [7:0] trafficLightOutput;
 
     // LOCAL VARIABLE FOR MODULE INPUTS
     wire [6:0] currentCount;
@@ -35,6 +36,8 @@ module Breadboard (clk, rst, hoursIn, pedSignal, emgSignal, emgLane, lanes);
 	//selector for mux is 4 bit one hot where 0001 is day, 0010 is night, 0100 is pedestrian, 1000 is emergnecy
 	Mux4 #(7) chooseLoadTimeForTimerModule(emgLoadTime, pedLoadTime, nightLoadTime, dayLoadTime, trafficModeOneHot, loadIn);
 
+    Mux4 #(8) chooseTrafficLightOuput (emergencyLightOutput, pedestrianLightOutput, nightTimeLightOutput, dayTimeLightOutput, trafficModeOneHot, trafficLightOutput);
+
     // MASTER TIMER MODULE. This outputs the clk input to the traffic mode modules.
     SaturationTimer TimerModule (clk, 1'b1, emgLoad, loadIn, currentCount, isZero);
 	
@@ -42,7 +45,7 @@ module Breadboard (clk, rst, hoursIn, pedSignal, emgSignal, emgLane, lanes);
     Pedestrian PedestrianModule (pedSignal, walkingLightOutput, pedestrianLightOutput, pedLoadTime);
     Emergency  EmergencyModule  (emgLane, emergencyLightOutput, emgLoad, emgLoadTime);
     DayTime    DayTimeModule    (isZero, lanes, dayTimeLightOutput, dayLoadTime);
-    NightTime  NightTimeModule  (clk, nightTimeLightOutput, nightLoadTime);
+    NightTime  NightTimeModule  (isZero, nightTimeLightOutput, nightLoadTime);
 
     //  TRAFFIC MODE STATE MACHINE
     TrafficMode TM (clk, rst, dayNightSignal, pedSignal, emgSignal, trafficMode);
