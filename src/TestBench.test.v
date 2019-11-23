@@ -54,8 +54,8 @@ module TestTestBench ();
         forever
             begin
                 #5
-                $fwrite(f, "=================================================================================\n", );
-                $fwrite(f, "=================================================================================\n");
+                $fwrite(f, "=========================================================================================================================================\n");
+                $fwrite(f, "=========================================================================================================================================\n");
                 $fwrite(f, "                                                              \n");
                 $fwrite(f, "                            N                                 \n");
                 $fwrite(f, "            S1: %8b                                           \n", s1);
@@ -83,11 +83,11 @@ module TestTestBench ();
                 $fwrite(f, "                  |   |   |###|   |   |                       \n");
                 $fwrite(f, "                                 N1: %8b                      \n", n1);
                 $fwrite(f, "                                 N2: %8b                      \n", n2);
-                $fwrite(f, "                            S                                 \n");
-                $fwrite(f, "                                                              \n");
-                $fwrite(f, "CLK|RST|HOURSIN|dayNightSignal|PED|EMG|MODE|EMG_LANE|Countdown|            DayLoad|NgtLoad|EmgLoad|PedLoad|ACTUAL_LOAD|\n");
-                $fwrite(f, "---+---+-------+--------------+---+---+----+WWSSEENN|---------\n");
-                $fwrite(f, "%1b  |%1b  |%5b  |%1b             |%1b  |%1b  |%2b  |%8b|%7b  |            %7b|%7b|%7b|%7b|%7b    |\n", clk, rst, hoursIn, TB.dayNightSignal, pedSignal, emgSignal, TB.trafficMode, emgLane, TB.currentCount,
+                $fwrite(f, "                            S                                              These values loaded into timer(countdown) for each mode change\n");
+                $fwrite(f, "                                                                           --------------------------------------------------------------\n");
+                $fwrite(f, "CLK|RST|HOURSIN|dayNightSignal|PED|EMG|MODE|EMG_LANE|Countdown|            |DayLoad|NgtLoad|EmgLoad|PedLoad|ACTUAL_LOAD_SELECTED_BY_MODE|\n");
+                $fwrite(f, "---+---+-------+--------------+---+---+----+WWSSEENN+---------|            |-------+-------+-------+-------+----------------------------|\n");
+                $fwrite(f, "%1b  |%1b  |%5b  |%1b             |%1b  |%1b  |%2b  |%8b|%7b  |            |%7b|%7b|%7b|%7b|     %7b                |\n", clk, rst, hoursIn, TB.dayNightSignal, pedSignal, emgSignal, TB.trafficMode, emgLane, TB.currentCount,
 																								TB.dayLoadTime, TB.nightLoadTime, TB.emgLoadTime, TB.pedLoadTime, TB.loadIn);
                 
             end
@@ -96,21 +96,45 @@ module TestTestBench ();
     initial
     begin
 		#2
+		$fwrite(f, "=======\n");
+		$fwrite(f, " RESET \n");
+		$fwrite(f, "=======\n");
 		w1 = 8'b00110000; w2 = 8'b00001110; s1 = 8'b00000011; s2 = 8'b00000000;
         e1 = 8'b00000000; e2 = 8'b00000000; n1 = 8'b00000000; n2 = 8'b00001111;
 		hoursIn = 5'b01100; pedSignal = 0; emgSignal = 0; emgLane = 8'b00000000;
-		
+		$fwrite(f, "******************\n");
+		$fwrite(f, " MODE 00: DAYTIME \n");
+		$fwrite(f, "******************\n");
 		#5 rst = 1; 
         #5 rst = 0;
-			
-        #60 emgSignal = 1; emgLane = 8'b00001000; e2 = 8'b00000001;
+		#60
+		
+		$fwrite(f, "\n\n********************\n");
+		$fwrite(f, " MODE 11: EMERGENCY \n");
+		$fwrite(f, "********************\n");
+            emgSignal = 1; emgLane = 8'b00001000; e2 = 8'b00000001;
 		#40 emgSignal = 0; emgLane = 8'b00000000;
-		#20
+		#10
+		
+		$fwrite(f, "\n\n******************\n");
+		$fwrite(f, " MODE 00: DAYTIME \n");
+		$fwrite(f, "******************\n");
+		#10
 		w1 = 8'b00000000; w2 = 8'b00000000; s1 = 8'b00000011; s2 = 8'b00000011;
         e1 = 8'b00110000; e2 = 8'b00011100; n1 = 8'b00000000; n2 = 8'b00000000;
+		#55
+			
+			hoursIn = 22; 
+		#5
+		$fwrite(f, "\n\n********************\n");
+		$fwrite(f, " MODE 01: NIGHTTIME \n");
+		$fwrite(f, "********************\n"); 
+		#55
 		
-		#60 hoursIn = 22;
-		#55 pedSignal = 1;
+		$fwrite(f, "\n\n*********************\n");
+		$fwrite(f, " MODE 10: PEDESTRIAN \n");
+		$fwrite(f, "*********************\n");
+		  pedSignal = 1;
 		#50
            
         // $fclose(f);
