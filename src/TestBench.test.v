@@ -8,14 +8,19 @@ module TestTestBench ();
 	reg [4:0] hoursIn;
 
     //  TRAFFIC LANE COUNT
-    reg [7:0] n1;
-    reg [7:0] n2;
-    reg [7:0] e1;
-    reg [7:0] e2;
-    reg [7:0] s1;
-    reg [7:0] s2;
     reg [7:0] w1;
-    reg [7:0] w2;
+	reg [7:0] w2;
+	reg [7:0] s1;
+	reg [7:0] s2;
+	reg [7:0] e1;
+    reg [7:0] e2;
+	reg [7:0] n1;
+    reg [7:0] n2;
+    
+    
+    
+    
+    
 
     //  WHICH LANE THE EMERGENCY IS IN
     reg [7:0] emgLane;
@@ -25,8 +30,13 @@ module TestTestBench ();
 
     //  BREADBOARD (clk, rst, hoursIn, pedSignal, emgSignal, emgLane, lanes, TB.dayTimeLightOutput);
     // Breadboard TB(clk, rst, hoursIn, pedSignal, emgSignal, emgLane, {n1, n2, e1, e2, s1, s2, w1, w2});
+<<<<<<< HEAD
     wire [7:0] trafficLightOutput;
     Breadboard TB(clk, rst, hoursIn, pedSignal, emgSignal, emgLane, {w1, w2, s1, s2, e1, e2, n1, n2}, trafficLightOutput);
+=======
+    
+    Breadboard TB(clk, rst, hoursIn, pedSignal, emgSignal, emgLane, {w1, w2, s1, s2, e1, e2, n1, n2});
+>>>>>>> 9f91906bd66c66b541a5187ce750b1f8a7eedf83
 
     //  THREAD WITH CLOCK CONTROL
     initial
