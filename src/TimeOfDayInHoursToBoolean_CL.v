@@ -6,7 +6,7 @@ module TimeOfDayInHoursToBoolean_CL (hoursIn, boolOut);
   output boolOut;
 
   assign boolOut =
-      H4'H2H1 + H3 +H4H2'
+      //H4'H2H1 + H3 +H4H2'
       (~hoursIn[4] & hoursIn[2] & hoursIn[1])
       | (hoursIn[3])
       | (hoursIn[4] & ~hoursIn[2]);

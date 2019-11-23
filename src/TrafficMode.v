@@ -30,7 +30,7 @@ module TrafficMode (clk, rst, dayNightSignal, pedSignal, emgSignal, currentState
     //  LOCAL VARIABLES
     wire [1:0] nextState;
     wire [1:0] nextTrafficMode;
-    wire [1:0] resetState = 2'b01;
+    wire [1:0] resetState = 2'b00;
 
     assign nextState = {{pedSignal | emgSignal}, 
                         {(~dayNightSignal & ~pedSignal) | emgSignal}};

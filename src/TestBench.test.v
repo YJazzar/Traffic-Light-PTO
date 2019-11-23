@@ -30,13 +30,9 @@ module TestTestBench ();
 
     //  BREADBOARD (clk, rst, hoursIn, pedSignal, emgSignal, emgLane, lanes, TB.dayTimeLightOutput);
     // Breadboard TB(clk, rst, hoursIn, pedSignal, emgSignal, emgLane, {n1, n2, e1, e2, s1, s2, w1, w2});
-<<<<<<< HEAD
     wire [7:0] trafficLightOutput;
     Breadboard TB(clk, rst, hoursIn, pedSignal, emgSignal, emgLane, {w1, w2, s1, s2, e1, e2, n1, n2}, trafficLightOutput);
-=======
-    
-    Breadboard TB(clk, rst, hoursIn, pedSignal, emgSignal, emgLane, {w1, w2, s1, s2, e1, e2, n1, n2});
->>>>>>> 9f91906bd66c66b541a5187ce750b1f8a7eedf83
+
 
     //  THREAD WITH CLOCK CONTROL
     initial
@@ -67,21 +63,21 @@ module TestTestBench ();
                 $fwrite(f, "                  |   |   |###|   |   |                       \n");
                 $fwrite(f, "                  |   |   |###|   |   |                       \n");
                 $fwrite(f, "                  |   |   |###|   |   |                       \n");
-                $fwrite(f, "                %1b%1b|   |   |###| %1b | %1b |%1b%1b         \n", TB.walkingLightOutput[6], TB.walkingLightOutput[0], TB.trafficLightOutput[0], TB.trafficLightOutput[1], TB.walkingLightOutput[4], TB.walkingLightOutput[7]);
+                $fwrite(f, "                %1b%1b|   |   |###| %1b | %1b |%1b%1b         \n", TB.walkingLightOutput[6], TB.walkingLightOutput[0], trafficLightOutput[0], trafficLightOutput[1], TB.walkingLightOutput[4], TB.walkingLightOutput[7]);
                 $fwrite(f, "     -------------         ---         -------------          \n");
-                $fwrite(f, "                 %1b                     W1: %8b              \n", TB.trafficLightOutput[6], w1);
+                $fwrite(f, "                 %1b                     W1: %8b              \n", trafficLightOutput[6], w1);
                 $fwrite(f, "     -------------         ---         -------------          \n");
-                $fwrite(f, "                 %1b                     W2: %8b              \n", TB.trafficLightOutput[7], w2);
+                $fwrite(f, "                 %1b                     W2: %8b              \n", trafficLightOutput[7], w2);
                 $fwrite(f, "     -------------         ---         -------------          \n");
-                $fwrite(f, "                  |   |   |###|       |                       \n");
-                $fwrite(f, "  W               |   |   |###|       |                E      \n");
-                $fwrite(f, "                  |   |   |###|       |                       \n");
+                $fwrite(f, "                  |   |   |###|   |   |                       \n");
+                $fwrite(f, "  W               |   |   |###|   |   |                E      \n");
+                $fwrite(f, "                  |   |   |###|   |   |                       \n");
                 $fwrite(f, "     -------------         ---         -------------          \n");
-                $fwrite(f, "     E1: %8b                      %1b                         \n", e1, TB.trafficLightOutput[2]);
+                $fwrite(f, "     E1: %8b                      %1b                         \n", e1, trafficLightOutput[2]);
                 $fwrite(f, "     -------------         ---         -------------          \n");
-                $fwrite(f, "     E2: %8b                      %1b                         \n", e2, TB.trafficLightOutput[3]);
+                $fwrite(f, "     E2: %8b                      %1b                         \n", e2, trafficLightOutput[3]);
                 $fwrite(f, "     -------------         ---         -------------          \n");
-                $fwrite(f, "                %1b%1b| %1b | %1b |###|   |   |%1b%1b         \n", TB.walkingLightOutput[2], TB.walkingLightOutput[1], TB.trafficLightOutput[4], TB.trafficLightOutput[5], TB.walkingLightOutput[5], TB.walkingLightOutput[3]);
+                $fwrite(f, "                %1b%1b| %1b | %1b |###|   |   |%1b%1b         \n", TB.walkingLightOutput[2], TB.walkingLightOutput[1], trafficLightOutput[4], trafficLightOutput[5], TB.walkingLightOutput[5], TB.walkingLightOutput[3]);
                 $fwrite(f, "                  |   |   |###|   |   |                       \n");
                 $fwrite(f, "                  |   |   |###|   |   |                       \n");
                 $fwrite(f, "                  |   |   |###|   |   |                       \n");
@@ -100,16 +96,23 @@ module TestTestBench ();
     //  THREAD WITH INPUT STIMULUS
     initial
     begin
+		#2
 		w1 = 8'b00000000; w2 = 8'b00000000; s1 = 8'b01111111; s2 = 8'b00000000;
         e1 = 8'b00000000; e2 = 8'b00000000; n1 = 8'b00000111; n2 = 8'b00000000;
-        #2
-        #5 rst = 1; hoursIn = 5'b01100; pedSignal = 0; emgSignal = 0;
-        #5 $fwrite(f, "+--------------+\n");
-           $fwrite(f, "| RESET SIGNAL |\n");
-           $fwrite(f, "+--------------+\n");
-        #5 rst = 0;  pedSignal = 0; emgSignal = 0;
-           
-           emgLane = 8'b00001000;
+		hoursIn = 5'b01100; pedSignal = 0; emgSignal = 0; emgLane = 8'b00000000;
+		
+		#5 rst = 1; 
+		
+        #5 rst = 0;
+		
+		#10 w1 = 8'b00110000; w2 = 8'b00001110; s1 = 8'b00000011; s2 = 8'b00000000;
+            e1 = 8'b00000000; e2 = 8'b00000000; n1 = 8'b00000000; n2 = 8'b00001111;
+			
+        #60 emgSignal = 1; emgLane = 8'b00001000;
+		
+		#40 emgSignal = 0; emgLane = 8'b00000000;
+		
+		#30 hoursIn = 22;
 		#60
            
         // $fclose(f);

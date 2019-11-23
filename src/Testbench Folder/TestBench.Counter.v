@@ -4,12 +4,12 @@ module CounterTestBench();
 	//clock signal
 	reg clk;
     parameter BIT_WIDTH = 6;
-    reg reset, down, load;
+    reg emgLoad, down;
     reg [BIT_WIDTH-1:0] loadIn;
     
     wire [BIT_WIDTH-1:0] currentCount;
     wire isZero;
-    SaturationTimer #(BIT_WIDTH) sc(clk, down, loadIn, currentCount, isZero);
+    SaturationTimer #(BIT_WIDTH) sc(clk, down, emgLoad, loadIn, currentCount, isZero);
 
 	
 	initial begin
@@ -28,13 +28,13 @@ module CounterTestBench();
     initial begin
         $display("Begin");
 		f = $fopen("output-Counter.txt","w");
-		$fwrite(f, "CLK|RST| down | load|loadIn | currCount | isZero |\n");
-		$fwrite(f, "---|---|------|-----|-------|-----------|--------|\n");
+		$fwrite(f, "CLK| down |Eload|loadIn | currCount | isZero |\n");
+		$fwrite(f, "---|------|-----|-------|-----------|--------|\n");
 		#1
 		forever begin
 		#5
              $fwrite(f, " %b | %b |   %b  |  %b  | %4d |   %4d   |    %b   |\n", 
-                clk, reset, down, load, loadIn, currentCount, isZero);
+                clk, down, emgLoad, loadIn, currentCount, isZero);
 
 											
 		end												

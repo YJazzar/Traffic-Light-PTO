@@ -52,8 +52,4 @@ module Breadboard (clk, rst, hoursIn, pedSignal, emgSignal, emgLane, lanes, traf
 
     //  DECODE TRAFFIC MODE
     Decoder TrafficModeDecoder (trafficMode, trafficModeOneHot);
-
-    //  SELECT MODULE OUTPUT TO USE
-    // Mux4 #(8) LightOutputMux (emergencyLightOutput, pedestrianLightOutput, nightTimeLightOutput, dayTimeLightOutput, trafficModeOneHot, trafficLightOutput);
-    //assign trafficLightOutput = dayTimeLightOutput;
 endmodule
