@@ -110,9 +110,12 @@ module TestTestBench ();
 			
         #60 emgSignal = 1; emgLane = 8'b00001000;
 		
+		    w1 = 8'b00000000; w2 = 8'b00000000; s1 = 8'b00000011; s2 = 8'b00000011;
+            e1 = 8'b00110000; e2 = 8'b00011100; n1 = 8'b00000000; n2 = 8'b00000000;
+		
 		#40 emgSignal = 0; emgLane = 8'b00000000;
 		
-		#30 hoursIn = 22;
+		#50 hoursIn = 22;
 		#60
            
         // $fclose(f);
