@@ -102,9 +102,8 @@ endmodule
  *      out = 1000 -> lane = W
  *      
  */
-module GetLargestLane (laneSum, largestTwoLanes, out);
+module GetLargestLane (laneSum, out);
     input  [3:0][8:0] laneSum;
-	output [1:0][8:0] largestTwoLanes;
     output [1:0] out;
 
 
@@ -121,10 +120,7 @@ module GetLargestLane (laneSum, largestTwoLanes, out);
     Mux2 #(9) mux1 (laneSum[1], laneSum[0], {~mgResult[0], mgResult[0]}, intermediateMax[0]);
     // Get the max lane from mg2
     Mux2 #(9) mux2 (laneSum[3], laneSum[2], {~mgResult[1], mgResult[1]}, intermediateMax[1]);
-	
-	//return the actual # of cars in the largest two lanes. used to calculate offest.
-	assign largestTwoLanes = {intermediateMax[0], intermediateMax[1]};
-	
+		
     MagnitudeComparator mg3 (intermediateMax[0], intermediateMax[1], mgResult[2]);
 
     // The three wires to figure out the final max:
@@ -136,7 +132,6 @@ module GetLargestLane (laneSum, largestTwoLanes, out);
 
     assign out = {~mgResult[2], temp[2]};
     
-
 endmodule  
 
 
@@ -151,15 +146,3 @@ module AddLanes (newLane, laneSum);
     Adder_8 four  (newLane[6], newLane[7], laneSum[3]);   // Add West  lanes
 endmodule
 
-module OffSet (largestTwoLanes, offsetTime);
-	input  [1:0][8:0] largestTwoLanes;
-	output [6:0] offsetTime;
-	
-	
-	wire  [1:0][8:0] twoMostSigBits;
-	LeftArbiter9bit getMostSigBit [1:0] (largestTwoLanes, twoMostSigBits);
-	
-	assign offsetTime = 7'b0010100;
-	
-	
-endmodule
