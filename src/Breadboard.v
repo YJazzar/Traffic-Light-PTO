@@ -1,6 +1,6 @@
 
 
-module Breadboard (clk, rst, hoursIn, pedSignal, emgSignal, emgLane, lanes, trafficLightOutput);
+module Breadboard (clk, rst, hoursIn, pedSignal, emgSignal, emgLane, lanes, walkingLightOutput, trafficLightOutput);
     //  INPUT
     input clk, rst; // clk is a 1 second clock
 	input [4:0] hoursIn;
@@ -8,19 +8,18 @@ module Breadboard (clk, rst, hoursIn, pedSignal, emgSignal, emgLane, lanes, traf
     input [7:0] emgLane;
     input [7:0][7:0] lanes;
 	
+	//  OUTPUTS
+	output [7:0] walkingLightOutput;
+    output [7:0] trafficLightOutput;
 	
     //  LOCAL VARIABLES
     wire isZero;
     wire [1:0] trafficMode;
     wire [3:0] trafficModeOneHot;
-    wire [7:0] walkingLightOutput;
     wire [7:0] emergencyLightOutput;
     wire [7:0] pedestrianLightOutput;
     wire [7:0] nightTimeLightOutput;
     wire [7:0] dayTimeLightOutput;
-
-    //  LOCAL VARIABLE TRAFFIC LIGHT OUTPUT
-    output [7:0] trafficLightOutput;
 
     // LOCAL VARIABLE FOR MODULE INPUTS
     wire [6:0] currentCount;
