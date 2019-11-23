@@ -116,7 +116,8 @@ module TestTestBench ();
 		#40 emgSignal = 0; emgLane = 8'b00000000;
 		
 		#50 hoursIn = 22;
-		#60
+		#60 pedSignal = 1;
+		#50
            
         // $fclose(f);
         $finish;
